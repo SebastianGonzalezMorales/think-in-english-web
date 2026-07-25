@@ -4,7 +4,7 @@ import { evaluateAnswer, shuffle } from '../utils/utils';
 import { useStats } from '../hooks/useStats';
 
 const LEVELS = [1, 2, 3, 4, 5];
-const COUNTS = [5, 10, 15];
+const COUNTS = [1, 2, 5, 10, 15];
 
 const MESSAGES = {
   success: ['Muy bien', 'Tu respuesta es correcta o muy cercana a una traducción natural.'],
@@ -30,6 +30,7 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
   const [queue,          setQueue]          = useState([]);
   const [currentIndex,   setCurrentIndex]   = useState(0);
   const [sessionCorrect, setSessionCorrect] = useState(0);
+  const [sessionHistory, setSessionHistory] = useState([]);
   const [started,        setStarted]        = useState(false);
   const [answered,       setAnswered]       = useState(false);
 
@@ -53,6 +54,7 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
       setQueue(shuffle(phrases));
       setCurrentIndex(0);
       setSessionCorrect(0);
+      setSessionHistory([]);
       setStarted(true);
       setAnswered(false);
       setInput('');
@@ -81,6 +83,7 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
     setQueue(q);
     setCurrentIndex(0);
     setSessionCorrect(0);
+    setSessionHistory([]);
     setStarted(true);
     setAnswered(false);
     setInput('');
@@ -100,6 +103,16 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
 
     setAnswered(true);
     setFeedback(ev);
+    setSessionHistory((history) => [
+      ...history,
+      {
+        phraseId: phrase.id,
+        question: phrase.es,
+        answer: trimmed,
+        recommended: ev.best.answer,
+        result: ev.result,
+      },
+    ]);
     if (correct) setSessionCorrect((n) => n + 1);
     recordAnswer(phrase, correct, trimmed);
   }, [answered, input, queue, currentIndex, recordAnswer]);
@@ -193,7 +206,7 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
         )}
 
         {/* ── Exercise card ── */}
-        <section className={`card exercise-card${isReviewMode ? ' exercise-card--full' : ''}`}>
+        <section className={`card exercise-card${isReviewMode ? ' exercise-card--full' : ''}${answered ? ' is-answered' : ''}`}>
           {isReviewMode && (
             <div className="review-mode-banner">
               <span>↺</span> Modo repaso — {queue.length} frases pendientes
@@ -204,6 +217,7 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
             <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>
 
+          <div className="exercise-body">
           {!started ? (
             <div className="empty-state">
               <div className="empty-icon">A→EN</div>
@@ -211,7 +225,7 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
               <p>Selecciona una categoría y un nivel. Luego escribe la frase completa en inglés.</p>
             </div>
           ) : (
-            <>
+            <div className="exercise-session">
               <div className="exercise-topline">
                 <span className="badge">{phrase.category} · Nivel {phrase.level}</span>
                 <span className="counter">Frase {currentIndex + 1} de {queue.length}</span>
@@ -226,7 +240,7 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
               <textarea
                 id="answerInput"
                 ref={textareaRef}
-                rows={4}
+                rows={2}
                 placeholder="Escribe tu traducción aquí…"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -275,8 +289,9 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
                   {isLast ? 'Finalizar sesión' : 'Siguiente frase →'}
                 </button>
               )}
-            </>
+            </div>
           )}
+          </div>
         </section>
       </div>
 
@@ -286,19 +301,53 @@ export default function PracticeView({ reviewQueue = null, onReviewDone }) {
           className="modal-backdrop"
           onClick={(e) => e.target === e.currentTarget && closeModal()}
         >
-          <div className="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-            <div className="modal-icon">{isReviewMode ? '↺' : '✓'}</div>
-            <p className="eyebrow">{isReviewMode ? 'REPASO TERMINADO' : 'SESIÓN TERMINADA'}</p>
-            <h2 id="modalTitle">{finalScore >= 80 ? '¡Buen trabajo!' : 'Sigue practicando'}</h2>
-            <p>
-              {isReviewMode
-                ? `Respondiste correctamente ${sessionCorrect} de ${queue.length} frases del repaso.`
-                : `Respondiste correctamente ${sessionCorrect} de ${queue.length} frases en ${category}.`}
-            </p>
-            <div className="modal-score">
-              <strong>{finalScore}%</strong>
-              <span>precisión</span>
+          <div className="modal-card session-summary" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div className="summary-header">
+              <div className="summary-heading">
+                <div className="modal-icon">{isReviewMode ? '↺' : '✓'}</div>
+                <div>
+                  <p className="eyebrow">{isReviewMode ? 'REPASO TERMINADO' : 'SESIÓN TERMINADA'}</p>
+                  <h2 id="modalTitle">{finalScore >= 80 ? '¡Buen trabajo!' : 'Sigue practicando'}</h2>
+                  <p>
+                    {isReviewMode
+                      ? `${sessionCorrect} de ${queue.length} frases correctas en el repaso.`
+                      : `${sessionCorrect} de ${queue.length} frases correctas en ${category}.`}
+                  </p>
+                </div>
+              </div>
+              <div className="modal-score">
+                <strong>{finalScore}%</strong>
+                <span>precisión</span>
+              </div>
             </div>
+
+            <div className="history-heading">
+              <h3>Historial de la sesión</h3>
+              <span>{sessionHistory.length} {sessionHistory.length === 1 ? 'respuesta' : 'respuestas'}</span>
+            </div>
+
+            <div className="session-history">
+              {sessionHistory.map((item, index) => {
+                const repeated = queue.filter((phraseItem) => phraseItem.id === item.phraseId).length > 1;
+                return (
+                  <article className={`history-item ${item.result}`} key={`${item.phraseId}-${index}`}>
+                    <div className="history-item-top">
+                      <span className="history-number">{index + 1}</span>
+                      <strong>{item.question}</strong>
+                      <span className={`history-result ${item.result}`}>
+                        {item.result === 'success' ? 'Correcta' : item.result === 'partial' ? 'Casi correcta' : 'A revisar'}
+                      </span>
+                    </div>
+                    {repeated && <span className="repeated-badge">↻ Frase repetida</span>}
+                    <div className="history-answers">
+                      <p><span>Tu respuesta</span>{item.answer}</p>
+                      <p><span>Recomendada</span>{item.recommended}</p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
             <button className="btn-primary btn-full" onClick={closeModal}>
               {isReviewMode ? 'Volver a frases difíciles' : 'Volver a practicar'}
             </button>

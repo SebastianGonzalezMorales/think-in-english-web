@@ -20,35 +20,39 @@ const PAGE_TITLES = {
 
 function Shell() {
   const [view,        setView]        = useState('practice');
-  // reviewQueue holds phrase ids to practice when coming from MistakesView
+  const [collapsed,   setCollapsed]   = useState(false);
   const [reviewQueue, setReviewQueue] = useState(null);
   const { dark, toggleTheme } = useTheme();
   const { stats } = useStats();
 
-  // Called from MistakesView with the ids to review
-  const startReview = (ids) => {
-    setReviewQueue(ids);
-    setView('review');
-  };
-
-  const handleNavClick = (id) => {
-    setReviewQueue(null);
-    setView(id);
-  };
-
+  const startReview = (ids) => { setReviewQueue(ids); setView('review'); };
+  const handleNavClick = (id) => { setReviewQueue(null); setView(id); };
   const activeNav = view === 'review' ? 'mistakes' : view;
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${collapsed ? ' sidebar-collapsed' : ''}`}>
       {/* ── Sidebar ── */}
       <aside className="sidebar">
         <div>
-          <div className="brand">
-            <div className="brand-mark">T</div>
-            <div>
-              <p className="eyebrow">ENTRENADOR ACTIVO</p>
-              <span className="brand-name">Think in English</span>
-            </div>
+          {/* Brand — hidden when collapsed */}
+          <div className="sidebar-header">
+            {!collapsed && (
+              <div className="brand">
+                <div className="brand-mark">T</div>
+                <div>
+                  <p className="eyebrow">ENTRENADOR ACTIVO</p>
+                  <span className="brand-name">Think in English</span>
+                </div>
+              </div>
+            )}
+            <button
+              className="collapse-btn"
+              onClick={() => setCollapsed(c => !c)}
+              aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
+              title={collapsed ? 'Expandir menú' : 'Colapsar menú'}
+            >
+              {collapsed ? '→' : '←'}
+            </button>
           </div>
 
           <nav className="nav-list" aria-label="Navegación principal">
@@ -58,33 +62,43 @@ function Shell() {
                 className={`nav-item${activeNav === id ? ' active' : ''}`}
                 onClick={() => handleNavClick(id)}
                 aria-current={activeNav === id ? 'page' : undefined}
+                title={collapsed ? label : undefined}
               >
                 <span className="nav-icon">{icon}</span>
-                <span>{label}</span>
+                {!collapsed && <span>{label}</span>}
               </button>
             ))}
           </nav>
         </div>
 
-        <div className="sidebar-card">
-          <p className="eyebrow">RACHA ACTUAL</p>
-          <div className="streak-row">
-            <span className="streak-icon">🔥</span>
-            <div>
-              <span className="streak-label">
-                {stats.streak} {stats.streak === 1 ? 'día' : 'días'}
-              </span>
-              <p className="streak-sub">Sigue practicando</p>
+        {!collapsed && (
+          <div className="sidebar-card">
+            <p className="eyebrow">RACHA ACTUAL</p>
+            <div className="streak-row">
+              <span className="streak-icon">🔥</span>
+              <div>
+                <span className="streak-label">
+                  {stats.streak} {stats.streak === 1 ? 'día' : 'días'}
+                </span>
+                <p className="streak-sub">Sigue practicando</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Streak icon-only when collapsed */}
+        {collapsed && (
+          <div className="streak-icon-only" title={`${stats.streak} ${stats.streak === 1 ? 'día' : 'días'} de racha`}>
+            🔥
+          </div>
+        )}
       </aside>
 
       {/* ── Main content ── */}
       <main className="main-content">
         <header className="topbar">
-          <div>
-            <p className="eyebrow">PRODUCCIÓN ACTIVA</p>
+          <div className="page-heading">
+            <span className="page-kicker">PRODUCCIÓN ACTIVA</span>
             <h2>{PAGE_TITLES[view]}</h2>
           </div>
           <button className="icon-button" onClick={toggleTheme} aria-label="Cambiar tema">
