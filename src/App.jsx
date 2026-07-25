@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { useStats } from './hooks/useStats';
-import PracticeView  from './components/PracticeView';
-import ProgressView  from './components/ProgressView';
-import MistakesView  from './components/MistakesView';
+import PracticeView from './components/PracticeView';
+import ProgressView from './components/ProgressView';
+import MistakesView from './components/MistakesView';
 
 const VIEWS = [
   { id: 'practice', icon: '✦', label: 'Practicar' },
@@ -13,14 +13,30 @@ const VIEWS = [
 
 const PAGE_TITLES = {
   practice: 'Construye la frase en inglés',
+  review:   'Repasando frases difíciles',
   progress: 'Tu progreso de aprendizaje',
   mistakes: 'Convierte errores en aprendizaje',
 };
 
 function Shell() {
-  const [view, setView] = useState('practice');
+  const [view,        setView]        = useState('practice');
+  // reviewQueue holds phrase ids to practice when coming from MistakesView
+  const [reviewQueue, setReviewQueue] = useState(null);
   const { dark, toggleTheme } = useTheme();
   const { stats } = useStats();
+
+  // Called from MistakesView with the ids to review
+  const startReview = (ids) => {
+    setReviewQueue(ids);
+    setView('review');
+  };
+
+  const handleNavClick = (id) => {
+    setReviewQueue(null);
+    setView(id);
+  };
+
+  const activeNav = view === 'review' ? 'mistakes' : view;
 
   return (
     <div className="app-shell">
@@ -39,9 +55,9 @@ function Shell() {
             {VIEWS.map(({ id, icon, label }) => (
               <button
                 key={id}
-                className={`nav-item${view === id ? ' active' : ''}`}
-                onClick={() => setView(id)}
-                aria-current={view === id ? 'page' : undefined}
+                className={`nav-item${activeNav === id ? ' active' : ''}`}
+                onClick={() => handleNavClick(id)}
+                aria-current={activeNav === id ? 'page' : undefined}
               >
                 <span className="nav-icon">{icon}</span>
                 <span>{label}</span>
@@ -71,18 +87,19 @@ function Shell() {
             <p className="eyebrow">PRODUCCIÓN ACTIVA</p>
             <h2>{PAGE_TITLES[view]}</h2>
           </div>
-          <button
-            className="icon-button"
-            onClick={toggleTheme}
-            aria-label="Cambiar tema"
-          >
+          <button className="icon-button" onClick={toggleTheme} aria-label="Cambiar tema">
             {dark ? '☀' : '☾'}
           </button>
         </header>
 
-        {view === 'practice' && <PracticeView />}
+        {(view === 'practice' || view === 'review') && (
+          <PracticeView
+            reviewQueue={reviewQueue}
+            onReviewDone={() => { setReviewQueue(null); setView('mistakes'); }}
+          />
+        )}
         {view === 'progress' && <ProgressView />}
-        {view === 'mistakes' && <MistakesView />}
+        {view === 'mistakes' && <MistakesView onStartReview={startReview} />}
       </main>
     </div>
   );

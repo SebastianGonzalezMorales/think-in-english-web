@@ -390,3 +390,56 @@ textarea:disabled { opacity: .6; cursor: default; }
   .prompt-sentence { font-size: 22px; }
   .modal-card { padding: 26px 20px; }
 }
+
+/* ─── Review mode ────────────────────────────────────────────────────────────── */
+.exercise-card--full {
+  grid-column: 1 / -1;
+}
+
+.review-mode-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-weight: 800;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* ─── Mistakes card extras ───────────────────────────────────────────────────── */
+.btn-review {
+  width: 100%;
+  margin-bottom: 20px;
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.mistake-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mistake-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.attempts-badge {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-radius: 999px;
+  padding: 3px 10px;
+}

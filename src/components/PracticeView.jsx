@@ -12,31 +12,54 @@ const MESSAGES = {
   error:   ['Necesita revisión', 'La respuesta se aleja de la estructura esperada o tiene errores importantes.'],
 };
 
-export default function PracticeView({ streak }) {
+/**
+ * reviewQueue: array of phrase ids to practice (passed from MistakesView).
+ * When present, the config panel is hidden and those phrases are loaded directly.
+ * onReviewDone: called when the review session ends.
+ */
+export default function PracticeView({ reviewQueue = null, onReviewDone }) {
   const { recordAnswer } = useStats();
+  const isReviewMode = reviewQueue !== null;
 
-  // ── Config ──────────────────────────────────────────────────────────────────
+  // ── Config (normal mode only) ────────────────────────────────────────────────
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [level,    setLevel]    = useState(1);
   const [count,    setCount]    = useState(10);
 
-  // ── Session ─────────────────────────────────────────────────────────────────
+  // ── Session ──────────────────────────────────────────────────────────────────
   const [queue,          setQueue]          = useState([]);
   const [currentIndex,   setCurrentIndex]   = useState(0);
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [started,        setStarted]        = useState(false);
   const [answered,       setAnswered]       = useState(false);
 
-  // ── Answer ──────────────────────────────────────────────────────────────────
+  // ── Answer ───────────────────────────────────────────────────────────────────
   const [input,       setInput]       = useState('');
   const [hintVisible, setHintVisible] = useState(false);
   const [feedback,    setFeedback]    = useState(null);
 
-  // ── Modal ───────────────────────────────────────────────────────────────────
-  const [modalOpen, setModalOpen] = useState(false);
+  // ── Modal ────────────────────────────────────────────────────────────────────
+  const [modalOpen,  setModalOpen]  = useState(false);
   const [finalScore, setFinalScore] = useState(0);
 
   const textareaRef = useRef(null);
+
+  // When reviewQueue changes (entering review mode), auto-start with those phrases
+  useEffect(() => {
+    if (isReviewMode && reviewQueue.length > 0) {
+      const phrases = reviewQueue
+        .map((id) => phraseBank.find((p) => p.id === id))
+        .filter(Boolean);
+      setQueue(shuffle(phrases));
+      setCurrentIndex(0);
+      setSessionCorrect(0);
+      setStarted(true);
+      setAnswered(false);
+      setInput('');
+      setHintVisible(false);
+      setFeedback(null);
+    }
+  }, [reviewQueue, isReviewMode]);
 
   // Auto-focus textarea on new question
   useEffect(() => {
@@ -46,7 +69,7 @@ export default function PracticeView({ streak }) {
     }
   }, [currentIndex, started, answered]);
 
-  // ── Start ───────────────────────────────────────────────────────────────────
+  // ── Start (normal mode) ──────────────────────────────────────────────────────
   const startSession = useCallback(() => {
     const candidates = phraseBank.filter((p) => p.category === category && p.level === level);
     const fallback   = phraseBank.filter((p) => p.category === category && Math.abs(p.level - level) <= 1);
@@ -65,7 +88,7 @@ export default function PracticeView({ streak }) {
     setFeedback(null);
   }, [category, level, count]);
 
-  // ── Check ───────────────────────────────────────────────────────────────────
+  // ── Check ────────────────────────────────────────────────────────────────────
   const checkAnswer = useCallback(() => {
     if (answered) return;
     const trimmed = input.trim();
@@ -81,11 +104,9 @@ export default function PracticeView({ streak }) {
     recordAnswer(phrase, correct, trimmed);
   }, [answered, input, queue, currentIndex, recordAnswer]);
 
-  // ── Next ────────────────────────────────────────────────────────────────────
+  // ── Next ─────────────────────────────────────────────────────────────────────
   const nextQuestion = useCallback(() => {
     if (currentIndex >= queue.length - 1) {
-      setFinalScore(Math.round(((sessionCorrect + (feedback?.result === 'success' ? 0 : 0)) / queue.length) * 100));
-      // recalculate using up-to-date sessionCorrect
       setFinalScore(Math.round((sessionCorrect / queue.length) * 100));
       setModalOpen(true);
       return;
@@ -95,9 +116,8 @@ export default function PracticeView({ streak }) {
     setHintVisible(false);
     setFeedback(null);
     setAnswered(false);
-  }, [currentIndex, queue.length, sessionCorrect, feedback]);
+  }, [currentIndex, queue.length, sessionCorrect]);
 
-  // Keyboard shortcut: Ctrl/Cmd + Enter → check
   const onKeyDown = useCallback((e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') checkAnswer();
   }, [checkAnswer]);
@@ -106,62 +126,80 @@ export default function PracticeView({ streak }) {
   const progress = started ? ((currentIndex + (answered ? 1 : 0)) / queue.length) * 100 : 0;
   const isLast   = currentIndex === queue.length - 1;
 
+  // ── Modal close ───────────────────────────────────────────────────────────────
+  const closeModal = () => {
+    setModalOpen(false);
+    if (isReviewMode) {
+      onReviewDone?.();
+    } else {
+      setStarted(false);
+    }
+  };
+
   return (
     <>
       <div className="practice-grid">
-        {/* ── Setup card ── */}
-        <section className="card setup-card">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">CONFIGURACIÓN</p>
-              <h3>Elige tu desafío</h3>
+        {/* ── Setup card (hidden in review mode) ── */}
+        {!isReviewMode && (
+          <section className="card setup-card">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">CONFIGURACIÓN</p>
+                <h3>Elige tu desafío</h3>
+              </div>
+              <span className="status-dot" />
             </div>
-            <span className="status-dot" />
-          </div>
 
-          <label className="field-label" htmlFor="categorySelect">Categoría</label>
-          <select
-            id="categorySelect"
-            className="select-input"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
+            <label className="field-label" htmlFor="categorySelect">Categoría</label>
+            <select
+              id="categorySelect"
+              className="select-input"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
 
-          <span className="field-label">Nivel</span>
-          <div className="level-grid">
-            {LEVELS.map((l) => (
-              <button
-                key={l}
-                className={`level-button${level === l ? ' active' : ''}`}
-                onClick={() => setLevel(l)}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
+            <span className="field-label">Nivel</span>
+            <div className="level-grid">
+              {LEVELS.map((l) => (
+                <button
+                  key={l}
+                  className={`level-button${level === l ? ' active' : ''}`}
+                  onClick={() => setLevel(l)}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
 
-          <span className="field-label">Frases por sesión</span>
-          <div className="segmented">
-            {COUNTS.map((c) => (
-              <button
-                key={c}
-                className={`seg-button${count === c ? ' active' : ''}`}
-                onClick={() => setCount(c)}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
+            <span className="field-label">Frases por sesión</span>
+            <div className="segmented">
+              {COUNTS.map((c) => (
+                <button
+                  key={c}
+                  className={`seg-button${count === c ? ' active' : ''}`}
+                  onClick={() => setCount(c)}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
 
-          <button className="btn-primary btn-full" onClick={startSession}>
-            Comenzar sesión
-          </button>
-        </section>
+            <button className="btn-primary btn-full" onClick={startSession}>
+              Comenzar sesión
+            </button>
+          </section>
+        )}
 
         {/* ── Exercise card ── */}
-        <section className="card exercise-card">
+        <section className={`card exercise-card${isReviewMode ? ' exercise-card--full' : ''}`}>
+          {isReviewMode && (
+            <div className="review-mode-banner">
+              <span>↺</span> Modo repaso — {queue.length} frases pendientes
+            </div>
+          )}
+
           <div className="progress-track">
             <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>
@@ -244,21 +282,25 @@ export default function PracticeView({ streak }) {
 
       {/* ── Session modal ── */}
       {modalOpen && (
-        <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && setModalOpen(false)}>
+        <div
+          className="modal-backdrop"
+          onClick={(e) => e.target === e.currentTarget && closeModal()}
+        >
           <div className="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-            <div className="modal-icon">✓</div>
-            <p className="eyebrow">SESIÓN TERMINADA</p>
-            <h2 id="modalTitle">Buen trabajo</h2>
-            <p>Respondiste correctamente {sessionCorrect} de {queue.length} frases en {category}.</p>
+            <div className="modal-icon">{isReviewMode ? '↺' : '✓'}</div>
+            <p className="eyebrow">{isReviewMode ? 'REPASO TERMINADO' : 'SESIÓN TERMINADA'}</p>
+            <h2 id="modalTitle">{finalScore >= 80 ? '¡Buen trabajo!' : 'Sigue practicando'}</h2>
+            <p>
+              {isReviewMode
+                ? `Respondiste correctamente ${sessionCorrect} de ${queue.length} frases del repaso.`
+                : `Respondiste correctamente ${sessionCorrect} de ${queue.length} frases en ${category}.`}
+            </p>
             <div className="modal-score">
               <strong>{finalScore}%</strong>
               <span>precisión</span>
             </div>
-            <button
-              className="btn-primary btn-full"
-              onClick={() => { setModalOpen(false); setStarted(false); }}
-            >
-              Volver a practicar
+            <button className="btn-primary btn-full" onClick={closeModal}>
+              {isReviewMode ? 'Volver a frases difíciles' : 'Volver a practicar'}
             </button>
           </div>
         </div>
