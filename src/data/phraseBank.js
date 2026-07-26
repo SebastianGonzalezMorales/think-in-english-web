@@ -153,6 +153,26 @@ export const phraseBank = [
   // ── Entrevistas · Nivel 5 ────────────────────────────────────────────────────
   { id: 94, category: 'Entrevistas', level: 5, es: 'Aunque todavía estoy desarrollando algunas habilidades, tengo la disciplina necesaria para aprender de manera constante.', answers: ['Although I am still developing some skills, I have the discipline needed to keep learning consistently.', 'Although I am still developing certain skills, I have the discipline required to learn consistently.'], hint: 'Puedes usar needed o required.', note: '"Keep learning" comunica continuidad y constancia.' },
   { id: 95, category: 'Entrevistas', level: 5, es: 'Lo que más valoro de un entorno de trabajo es la cultura de retroalimentación continua y el espacio para asumir nuevos desafíos.', answers: ['What I value most in a work environment is a culture of continuous feedback and room to take on new challenges.', 'What I appreciate most about a workplace is a continuous feedback culture and the opportunity to take on new responsibilities.'], hint: 'Comienza con "What I value most...".', note: '"Room to take on challenges" es una expresión idiomática para tener espacio y libertad.' },
+
+  // ── Números · Nivel 1 ────────────────────────────────────────────────────────
+  { id: 96, category: 'Números', level: 1, es: '45', answers: ['Forty-five.', 'Forty five.'], hint: 'Las decenas van primero: forty + five.', note: 'Los números compuestos del 21 al 99 normalmente se escriben con guion.' },
+  { id: 97, category: 'Números', level: 1, es: '89', answers: ['Eighty-nine.', 'Eighty nine.'], hint: 'Las decenas van primero: eighty + nine.', note: '"Eighty" se escribe sin una segunda t.' },
+
+  // ── Números · Nivel 2 ────────────────────────────────────────────────────────
+  { id: 98, category: 'Números', level: 2, es: '305', answers: ['Three hundred and five.', 'Three hundred five.'], hint: 'Comienza con three hundred.', note: 'El inglés británico suele incluir "and"; en inglés estadounidense también es común omitirlo.' },
+  { id: 99, category: 'Números', level: 2, es: '712', answers: ['Seven hundred and twelve.', 'Seven hundred twelve.'], hint: 'Comienza con seven hundred.', note: 'Ambas variantes, con y sin "and", son correctas.' },
+
+  // ── Números · Nivel 3 ────────────────────────────────────────────────────────
+  { id: 100, category: 'Números', level: 3, es: '1903', answers: ['One thousand nine hundred and three.', 'One thousand nine hundred three.'], hint: 'Sepáralo en one thousand + nine hundred + three.', note: 'Como número cardinal se dice "one thousand nine hundred (and) three".' },
+  { id: 101, category: 'Números', level: 3, es: '2026', answers: ['Two thousand and twenty-six.', 'Two thousand twenty-six.', 'Twenty twenty-six.'], hint: 'Puedes comenzar con two thousand o, si es un año, con twenty.', note: 'Como número se dice "two thousand (and) twenty-six"; como año también puede decirse "twenty twenty-six".' },
+
+  // ── Números · Nivel 4 ────────────────────────────────────────────────────────
+  { id: 102, category: 'Números', level: 4, es: '15.480', answers: ['Fifteen thousand four hundred and eighty.', 'Fifteen thousand four hundred eighty.'], hint: 'Sepáralo en fifteen thousand + four hundred + eighty.', note: 'El punto en español funciona como separador de miles.' },
+  { id: 103, category: 'Números', level: 4, es: '72.619', answers: ['Seventy-two thousand six hundred and nineteen.', 'Seventy two thousand six hundred nineteen.'], hint: 'Comienza con seventy-two thousand.', note: 'Los grupos de miles y centenas se leen de izquierda a derecha.' },
+
+  // ── Números · Nivel 5 ────────────────────────────────────────────────────────
+  { id: 104, category: 'Números', level: 5, es: '1.250.000', answers: ['One million two hundred and fifty thousand.', 'One million two hundred fifty thousand.'], hint: 'Comienza con one million y luego lee los miles.', note: 'No se agrega una "s" a million cuando va precedido por una cantidad exacta.' },
+  { id: 105, category: 'Números', level: 5, es: '9.876.543', answers: ['Nine million eight hundred and seventy-six thousand five hundred and forty-three.', 'Nine million eight hundred seventy-six thousand five hundred forty-three.'], hint: 'Divide el número en millones, miles y unidades.', note: 'Leer el número en grupos de tres cifras ayuda a mantener el orden correcto.' },
 ];
 
 export const CATEGORIES = [...new Set(phraseBank.map((p) => p.category))];

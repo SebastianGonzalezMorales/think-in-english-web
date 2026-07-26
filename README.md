@@ -21,7 +21,7 @@ Cada ejercicio te muestra una frase en español y tú debes escribir la traducci
 - **Traducción activa** — escribe la frase completa en inglés, sin ayuda de opciones múltiples
 - **Evaluación inteligente** — combina comparación exacta con distancia de Levenshtein para aceptar variaciones naturales y contracciones (`I'm`, `couldn't`, etc.)
 - **Retroalimentación inmediata** — versión recomendada, explicación gramatical y alternativas válidas
-- **6 categorías** — Vida cotidiana, Trabajo, Tecnología, Viajes, Universidad, Entrevistas
+- **7 categorías** — Vida cotidiana, Trabajo, Tecnología, Viajes, Universidad, Entrevistas, Números
 - **5 niveles de dificultad** — desde present simple hasta condicionales complejos y registro académico
 - **Frases difíciles** — las respuestas incorrectas se guardan automáticamente para repetición inteligente
 - **Progreso por categoría** — precisión, total de frases respondidas y racha diaria
