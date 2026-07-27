@@ -4,11 +4,15 @@ import { useStats } from './hooks/useStats';
 import PracticeView from './components/PracticeView';
 import ProgressView from './components/ProgressView';
 import MistakesView from './components/MistakesView';
+import VocabularyView from './components/VocabularyView';
+import VocabularyPracticeView from './components/VocabularyPracticeView';
 
 const VIEWS = [
   { id: 'practice', icon: '✦', label: 'Practicar' },
   { id: 'progress', icon: '◎', label: 'Progreso' },
   { id: 'mistakes', icon: '↺', label: 'Frases difíciles' },
+  { id: 'vocabulary', icon: 'Aa', label: 'Mis palabras' },
+  { id: 'vocabulary-practice', icon: '⇄', label: 'Practicar palabras' },
 ];
 
 const PAGE_TITLES = {
@@ -16,6 +20,8 @@ const PAGE_TITLES = {
   review:   'Repasando frases difíciles',
   progress: 'Tu progreso de aprendizaje',
   mistakes: 'Convierte errores en aprendizaje',
+  vocabulary: 'Construye tu vocabulario personal',
+  'vocabulary-practice': 'Practica tus palabras',
 };
 
 function Shell() {
@@ -114,6 +120,10 @@ function Shell() {
         )}
         {view === 'progress' && <ProgressView />}
         {view === 'mistakes' && <MistakesView onStartReview={startReview} />}
+        {view === 'vocabulary' && <VocabularyView />}
+        {view === 'vocabulary-practice' && (
+          <VocabularyPracticeView onGoToVocabulary={() => setView('vocabulary')} />
+        )}
       </main>
     </div>
   );

@@ -24,6 +24,8 @@ Cada ejercicio te muestra una frase en español y tú debes escribir la traducci
 - **7 categorías** — Vida cotidiana, Trabajo, Tecnología, Viajes, Universidad, Entrevistas, Números
 - **5 niveles de dificultad** — desde present simple hasta condicionales complejos y registro académico
 - **Frases difíciles** — las respuestas incorrectas se guardan automáticamente para repetición inteligente
+- **Vocabulario personal** — guarda palabras nuevas, su significado y una frase de contexto
+- **Práctica bidireccional de palabras** — practica inglés → español, español → inglés o ambas direcciones mezcladas
 - **Progreso por categoría** — precisión, total de frases respondidas y racha diaria
 - **Modo oscuro** — persistido entre sesiones
 - **Sin backend** — todo corre en el navegador con `localStorage`
