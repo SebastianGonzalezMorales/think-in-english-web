@@ -6,6 +6,9 @@ import ProgressView from './components/ProgressView';
 import MistakesView from './components/MistakesView';
 import VocabularyView from './components/VocabularyView';
 import VocabularyPracticeView from './components/VocabularyPracticeView';
+import AuthView from './components/AuthView';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { VocabularyProvider } from './hooks/useVocabulary';
 
 const VIEWS = [
   { id: 'practice', icon: '✦', label: 'Practicar' },
@@ -30,6 +33,7 @@ function Shell() {
   const [reviewQueue, setReviewQueue] = useState(null);
   const { dark, toggleTheme } = useTheme();
   const { stats } = useStats();
+  const { user, logout } = useAuth();
 
   const startReview = (ids) => { setReviewQueue(ids); setView('review'); };
   const handleNavClick = (id) => { setReviewQueue(null); setView(id); };
@@ -107,9 +111,11 @@ function Shell() {
             <span className="page-kicker">PRODUCCIÓN ACTIVA</span>
             <h2>{PAGE_TITLES[view]}</h2>
           </div>
-          <button className="icon-button" onClick={toggleTheme} aria-label="Cambiar tema">
-            {dark ? '☀' : '☾'}
-          </button>
+          <div className="account-actions">
+            <span>{user.displayName}</span>
+            <button className="btn-account" onClick={logout}>Salir</button>
+            <button className="icon-button" onClick={toggleTheme} aria-label="Cambiar tema">{dark ? '☀' : '☾'}</button>
+          </div>
         </header>
 
         {(view === 'practice' || view === 'review') && (
@@ -129,10 +135,19 @@ function Shell() {
   );
 }
 
+function SessionApp() {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="app-loading">Cargando…</div>;
+  if (!user) return <AuthView />;
+  return <VocabularyProvider><Shell /></VocabularyProvider>;
+}
+
 export default function App() {
   return (
     <ThemeProvider>
-      <Shell />
+      <AuthProvider>
+        <SessionApp />
+      </AuthProvider>
     </ThemeProvider>
   );
 }

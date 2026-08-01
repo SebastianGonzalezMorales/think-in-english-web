@@ -28,7 +28,8 @@ Cada ejercicio te muestra una frase en español y tú debes escribir la traducci
 - **Práctica bidireccional de palabras** — practica inglés → español, español → inglés o ambas direcciones mezcladas
 - **Progreso por categoría** — precisión, total de frases respondidas y racha diaria
 - **Modo oscuro** — persistido entre sesiones
-- **Sin backend** — todo corre en el navegador con `localStorage`
+- **Cuentas personales** — autenticación mediante una sesión segura en cookie HttpOnly
+- **Vocabulario sincronizado** — palabras y frases personales almacenadas en MongoDB
 
 ---
 
@@ -38,33 +39,61 @@ Cada ejercicio te muestra una frase en español y tú debes escribir la traducci
 |---|---|
 | React 18 | UI y manejo de estado |
 | Vite 5 | Bundler y dev server |
+| Node.js + Express | API REST |
+| MongoDB Atlas + Mongoose | Persistencia multiusuario |
 | CSS custom properties | Theming (modo claro/oscuro) |
-| localStorage | Persistencia de progreso |
+| localStorage | Progreso local y migración inicial de vocabulario |
 
-Sin librerías de componentes, sin CSS frameworks — todo el diseño está hecho a mano.
+Sin librerías de componentes ni frameworks CSS; todo el diseño está hecho a mano.
+
+## Configurar MongoDB y el backend
+
+1. Crea un proyecto y un cluster en MongoDB Atlas.
+2. Crea un usuario de base de datos y autoriza tu IP de desarrollo.
+3. Copia `backend/.env.example` como `backend/.env` y completa `MONGODB_URI` y `JWT_SECRET`.
+4. Usa un secreto aleatorio de al menos 32 caracteres para `JWT_SECRET`.
+
+```bash
+# Frontend y backend simultáneamente
+pnpm dev
+
+# También puedes iniciarlos por separado
+pnpm dev:frontend
+pnpm dev:backend
+```
+
+La aplicación corre en `http://localhost:5173` y Vite redirige `/api` a `http://localhost:3000` durante el desarrollo.
+
+Para importar o actualizar el catálogo de `frontend/src/data/phraseBank.js` en MongoDB:
+
+```bash
+pnpm seed:phrases
+```
+
+El vocabulario existente en `localStorage` se importa automáticamente a la cuenta la primera vez que se inicia sesión. Solo se elimina la copia local después de una importación exitosa.
 
 ---
 
 ## Estructura del proyecto
 
 ```
-src/
-├── App.jsx                  # Shell principal, sidebar, navegación
-├── main.jsx                 # Entry point
-├── styles/
-│   └── global.css           # Tokens de diseño y componentes CSS
-├── context/
-│   └── ThemeContext.jsx      # Modo oscuro / claro
-├── hooks/
-│   └── useStats.js          # Estado de progreso y localStorage
-├── data/
-│   └── phraseBank.js        # Banco de 32 frases con hints y notas
-├── utils/
-│   └── utils.js             # Levenshtein, normalización, evaluación
-└── components/
-    ├── PracticeView.jsx     # Vista principal de ejercicios
-    ├── ProgressView.jsx     # Métricas y progreso por categoría
-    └── MistakesView.jsx     # Frases pendientes de refuerzo
+frontend/
+├── src/                     # Aplicación React
+├── index.html
+├── vite.config.js
+└── package.json
+backend/
+├── src/
+│   ├── middleware/          # Autenticación y manejo de errores
+│   ├── models/              # Modelos de MongoDB
+│   ├── routes/              # Endpoints de la API
+│   ├── app.js
+│   └── index.js
+├── scripts/                 # Importación del catálogo
+├── .env.example
+└── package.json
+package.json                 # Comandos del monorepo
+pnpm-workspace.yaml          # Configuración del workspace
 ```
 
 ---
@@ -77,17 +106,17 @@ git clone https://github.com/SebastianGonzalezMorales/think-in-english-web.git
 cd think-in-english-web
 
 # Instalar dependencias
-npm install
+pnpm install
 
 # Iniciar el servidor de desarrollo
-npm run dev
+pnpm dev
 ```
 
 Abre `http://localhost:5173` en el navegador.
 
 ```bash
 # Build de producción
-npm run build
+pnpm build
 ```
 
 ---

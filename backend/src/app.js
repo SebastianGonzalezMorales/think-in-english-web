@@ -1,0 +1,22 @@
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
+import helmet from 'helmet';
+import { config } from './config.js';
+import { handleError, notFound } from './middleware/errors.js';
+import { authRouter } from './routes/auth.js';
+import { phrasesRouter } from './routes/phrases.js';
+import { vocabularyRouter } from './routes/vocabulary.js';
+
+export const app = express();
+app.disable('x-powered-by');
+app.use(helmet());
+app.use(cors({ origin: config.CLIENT_ORIGIN, credentials: true }));
+app.use(express.json({ limit: '100kb' }));
+app.use(cookieParser());
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+app.use('/api/auth', authRouter);
+app.use('/api/phrases', phrasesRouter);
+app.use('/api/vocabulary', vocabularyRouter);
+app.use(notFound);
+app.use(handleError);

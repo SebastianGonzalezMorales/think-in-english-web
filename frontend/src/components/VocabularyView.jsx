@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { useVocabulary } from '../hooks/useVocabulary';
 
 export default function VocabularyView() {
-  const { words, addWord, removeWord } = useVocabulary();
-  const [form, setForm] = useState({ english: '', spanish: '', context: '' });
+  const { words, loading, error, addWord, removeWord } = useVocabulary();
+  const [form, setForm] = useState({ english: '', spanish: '', context: '', type: 'word' });
   const [message, setMessage] = useState(null);
   const [query, setQuery] = useState('');
 
@@ -21,17 +21,17 @@ export default function VocabularyView() {
     setMessage(null);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const result = addWord(form);
+    const result = await addWord(form);
     if (!result.ok) {
       setMessage(result.reason === 'duplicate'
         ? { type: 'error', text: 'Esa palabra en inglés ya está guardada.' }
-        : { type: 'error', text: 'Completa la palabra en inglés y su significado.' });
+        : { type: 'error', text: result.message ?? 'No fue posible guardar el vocabulario.' });
       return;
     }
-    setForm({ english: '', spanish: '', context: '' });
-    setMessage({ type: 'success', text: 'Palabra guardada. Ya puedes practicarla.' });
+    setForm({ english: '', spanish: '', context: '', type: 'word' });
+    setMessage({ type: 'success', text: 'Vocabulario guardado de forma segura.' });
   };
 
   return (
@@ -47,7 +47,14 @@ export default function VocabularyView() {
 
         <form onSubmit={handleSubmit} className="vocabulary-form">
           <div>
-            <label className="field-label" htmlFor="englishWord">Palabra en inglés</label>
+            <label className="field-label" htmlFor="vocabularyType">Tipo</label>
+            <select id="vocabularyType" className="text-input" value={form.type} onChange={(event) => updateField('type', event.target.value)}>
+              <option value="word">Palabra</option>
+              <option value="phrase">Frase</option>
+            </select>
+          </div>
+          <div>
+            <label className="field-label" htmlFor="englishWord">Inglés</label>
             <input
               id="englishWord"
               className="text-input"
@@ -58,7 +65,7 @@ export default function VocabularyView() {
             />
           </div>
           <div>
-            <label className="field-label" htmlFor="spanishMeaning">Significado en español</label>
+            <label className="field-label" htmlFor="spanishMeaning">Español</label>
             <input
               id="spanishMeaning"
               className="text-input"
@@ -79,7 +86,7 @@ export default function VocabularyView() {
               autoComplete="off"
             />
           </div>
-          <button className="btn-primary vocabulary-submit" type="submit">+ Guardar palabra</button>
+          <button className="btn-primary vocabulary-submit" type="submit">+ Guardar</button>
         </form>
         {message && <p className={`form-message ${message.type}`}>{message.text}</p>}
       </section>
@@ -101,7 +108,11 @@ export default function VocabularyView() {
           )}
         </div>
 
-        {words.length === 0 ? (
+        {loading ? (
+          <div className="empty-list">Cargando tu vocabulario…</div>
+        ) : error ? (
+          <div className="empty-list">{error}</div>
+        ) : words.length === 0 ? (
           <div className="empty-list">
             Aún no guardaste palabras. Agrega la primera para comenzar tu colección personal.
           </div>
@@ -123,7 +134,10 @@ export default function VocabularyView() {
                     <span>{accuracy === null ? 'Sin practicar' : `${accuracy}% · ${word.attempts} intentos`}</span>
                     <button
                       className="btn-delete-word"
-                      onClick={() => removeWord(word.id)}
+                      onClick={async () => {
+                        try { await removeWord(word.id); }
+                        catch (requestError) { setMessage({ type: 'error', text: requestError.message }); }
+                      }}
                       aria-label={`Eliminar ${word.english}`}
                     >
                       Eliminar

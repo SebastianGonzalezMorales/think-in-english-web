@@ -1,18 +1,14 @@
 {
-  "name": "think-in-english-web",
+  "name": "think-in-english",
   "version": "1.0.0",
-  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.2"
+    "dev": "pnpm --parallel --filter think-in-english-frontend --filter think-in-english-backend dev",
+    "dev:frontend": "pnpm --filter think-in-english-frontend dev",
+    "dev:backend": "pnpm --filter think-in-english-backend dev",
+    "build": "pnpm --filter think-in-english-frontend build",
+    "start:backend": "pnpm --filter think-in-english-backend start",
+    "seed:phrases": "pnpm --filter think-in-english-backend seed:phrases"
   }
 }
