@@ -1,9 +1,14 @@
 import { useMemo, useState } from 'react';
 import { useVocabulary } from '../hooks/useVocabulary';
 
-export default function VocabularyView() {
-  const { words, loading, error, addWord, removeWord } = useVocabulary();
-  const [form, setForm] = useState({ english: '', spanish: '', context: '', type: 'word' });
+export default function VocabularyView({ itemType = 'word' }) {
+  const vocabulary = useVocabulary();
+  const words = itemType === 'phrase' ? vocabulary.phrases : vocabulary.words;
+  const { loading, error, addWord, removeWord } = vocabulary;
+  const isPhrase = itemType === 'phrase';
+  const singular = isPhrase ? 'frase' : 'palabra';
+  const plural = isPhrase ? 'frases' : 'palabras';
+  const [form, setForm] = useState({ english: '', spanish: '', context: '' });
   const [message, setMessage] = useState(null);
   const [query, setQuery] = useState('');
 
@@ -23,15 +28,15 @@ export default function VocabularyView() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const result = await addWord(form);
+    const result = await addWord({ ...form, type: itemType });
     if (!result.ok) {
       setMessage(result.reason === 'duplicate'
-        ? { type: 'error', text: 'Esa palabra en inglés ya está guardada.' }
+        ? { type: 'error', text: `Esa ${singular} en inglés ya está guardada.` }
         : { type: 'error', text: result.message ?? 'No fue posible guardar el vocabulario.' });
       return;
     }
-    setForm({ english: '', spanish: '', context: '', type: 'word' });
-    setMessage({ type: 'success', text: 'Vocabulario guardado de forma segura.' });
+    setForm({ english: '', spanish: '', context: '' });
+    setMessage({ type: 'success', text: `${isPhrase ? 'Frase' : 'Palabra'} guardada de forma segura.` });
   };
 
   return (
@@ -39,20 +44,13 @@ export default function VocabularyView() {
       <section className="card vocabulary-form-card">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">VOCABULARIO PERSONAL</p>
-            <h3>Agrega una palabra nueva</h3>
+            <p className="eyebrow">{isPhrase ? 'FRASES PERSONALES' : 'VOCABULARIO PERSONAL'}</p>
+            <h3>Agrega una {singular} nueva</h3>
           </div>
-          <span className="word-count">{words.length} {words.length === 1 ? 'palabra' : 'palabras'}</span>
+          <span className="word-count">{words.length} {words.length === 1 ? singular : plural}</span>
         </div>
 
         <form onSubmit={handleSubmit} className="vocabulary-form">
-          <div>
-            <label className="field-label" htmlFor="vocabularyType">Tipo</label>
-            <select id="vocabularyType" className="text-input" value={form.type} onChange={(event) => updateField('type', event.target.value)}>
-              <option value="word">Palabra</option>
-              <option value="phrase">Frase</option>
-            </select>
-          </div>
           <div>
             <label className="field-label" htmlFor="englishWord">Inglés</label>
             <input
@@ -60,7 +58,7 @@ export default function VocabularyView() {
               className="text-input"
               value={form.english}
               onChange={(event) => updateField('english', event.target.value)}
-              placeholder="Ej.: nevertheless"
+              placeholder={isPhrase ? 'Ej.: I am looking forward to it' : 'Ej.: nevertheless'}
               autoComplete="off"
             />
           </div>
@@ -71,7 +69,7 @@ export default function VocabularyView() {
               className="text-input"
               value={form.spanish}
               onChange={(event) => updateField('spanish', event.target.value)}
-              placeholder="Ej.: sin embargo"
+              placeholder={isPhrase ? 'Ej.: Tengo muchas ganas' : 'Ej.: sin embargo'}
               autoComplete="off"
             />
           </div>
@@ -82,7 +80,7 @@ export default function VocabularyView() {
               className="text-input"
               value={form.context}
               onChange={(event) => updateField('context', event.target.value)}
-              placeholder="Ej.: Nevertheless, we continued."
+              placeholder={isPhrase ? 'Ej.: Una situación donde usarías esta frase' : 'Ej.: Nevertheless, we continued.'}
               autoComplete="off"
             />
           </div>
@@ -95,15 +93,15 @@ export default function VocabularyView() {
         <div className="section-heading vocabulary-list-heading">
           <div>
             <p className="eyebrow">TU COLECCIÓN</p>
-            <h3>Palabras guardadas</h3>
+            <h3>{isPhrase ? 'Frases guardadas' : 'Palabras guardadas'}</h3>
           </div>
           {words.length > 0 && (
             <input
               className="text-input vocabulary-search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Buscar palabra…"
-              aria-label="Buscar palabra"
+              placeholder={`Buscar ${singular}…`}
+              aria-label={`Buscar ${singular}`}
             />
           )}
         </div>
@@ -114,10 +112,10 @@ export default function VocabularyView() {
           <div className="empty-list">{error}</div>
         ) : words.length === 0 ? (
           <div className="empty-list">
-            Aún no guardaste palabras. Agrega la primera para comenzar tu colección personal.
+            Aún no guardaste {plural}. Agrega la primera para comenzar tu colección personal.
           </div>
         ) : filteredWords.length === 0 ? (
-          <div className="empty-list">No encontramos palabras para esa búsqueda.</div>
+          <div className="empty-list">No encontramos {plural} para esa búsqueda.</div>
         ) : (
           <div className="word-list">
             {filteredWords.map((word) => {

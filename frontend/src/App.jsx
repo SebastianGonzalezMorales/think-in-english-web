@@ -16,6 +16,8 @@ const VIEWS = [
   { id: 'mistakes', icon: '↺', label: 'Frases difíciles' },
   { id: 'vocabulary', icon: 'Aa', label: 'Mis palabras' },
   { id: 'vocabulary-practice', icon: '⇄', label: 'Practicar palabras' },
+  { id: 'my-phrases', icon: '“”', label: 'Mis frases' },
+  { id: 'phrases-practice', icon: '↔', label: 'Practicar frases' },
 ];
 
 const PAGE_TITLES = {
@@ -25,6 +27,8 @@ const PAGE_TITLES = {
   mistakes: 'Convierte errores en aprendizaje',
   vocabulary: 'Construye tu vocabulario personal',
   'vocabulary-practice': 'Practica tus palabras',
+  'my-phrases': 'Construye tu colección de frases',
+  'phrases-practice': 'Practica tus frases',
 };
 
 function Shell() {
@@ -46,6 +50,13 @@ function Shell() {
         <div>
           {/* Brand — hidden when collapsed */}
           <div className="sidebar-header">
+            <div className="mobile-brand">
+              <div className="brand-mark">T</div>
+              <div>
+                <p className="eyebrow">ENTRENADOR ACTIVO</p>
+                <span className="brand-name">Think in English</span>
+              </div>
+            </div>
             {!collapsed && (
               <div className="brand">
                 <div className="brand-mark">T</div>
@@ -63,6 +74,12 @@ function Shell() {
             >
               {collapsed ? '→' : '←'}
             </button>
+            <div className="mobile-account-actions">
+              <button className="btn-account" onClick={logout}>Salir</button>
+              <button className="icon-button" onClick={toggleTheme} aria-label="Cambiar tema">
+                {dark ? '☀' : '☾'}
+              </button>
+            </div>
           </div>
 
           <nav className="nav-list" aria-label="Navegación principal">
@@ -127,8 +144,15 @@ function Shell() {
         {view === 'progress' && <ProgressView />}
         {view === 'mistakes' && <MistakesView onStartReview={startReview} />}
         {view === 'vocabulary' && <VocabularyView />}
+        {view === 'my-phrases' && <VocabularyView itemType="phrase" />}
         {view === 'vocabulary-practice' && (
           <VocabularyPracticeView onGoToVocabulary={() => setView('vocabulary')} />
+        )}
+        {view === 'phrases-practice' && (
+          <VocabularyPracticeView
+            itemType="phrase"
+            onGoToVocabulary={() => setView('my-phrases')}
+          />
         )}
       </main>
     </div>

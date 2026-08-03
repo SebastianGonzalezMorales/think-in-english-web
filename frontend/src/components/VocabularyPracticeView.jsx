@@ -26,8 +26,13 @@ function createQueue(words, mode) {
   }));
 }
 
-export default function VocabularyPracticeView({ onGoToVocabulary }) {
-  const { words, recordAttempt } = useVocabulary();
+export default function VocabularyPracticeView({ onGoToVocabulary, itemType = 'word' }) {
+  const vocabulary = useVocabulary();
+  const words = itemType === 'phrase' ? vocabulary.phrases : vocabulary.words;
+  const { recordAttempt } = vocabulary;
+  const isPhrase = itemType === 'phrase';
+  const singular = isPhrase ? 'frase' : 'palabra';
+  const plural = isPhrase ? 'frases' : 'palabras';
   const [mode, setMode] = useState('mixed');
   const [queue, setQueue] = useState([]);
   const [index, setIndex] = useState(0);
@@ -77,9 +82,9 @@ export default function VocabularyPracticeView({ onGoToVocabulary }) {
       <div className="view-scroll">
         <section className="card vocabulary-empty-practice">
           <div className="empty-icon">Aa</div>
-          <h3>Primero agrega algunas palabras</h3>
-          <p>Necesitas vocabulario guardado para iniciar una sesión de memorización.</p>
-          <button className="btn-primary" onClick={onGoToVocabulary}>Ir a Mis palabras</button>
+          <h3>Primero agrega algunas {plural}</h3>
+          <p>Necesitas {plural} guardadas para iniciar una sesión de memorización.</p>
+          <button className="btn-primary" onClick={onGoToVocabulary}>Ir a Mis {plural}</button>
         </section>
       </div>
     );
@@ -104,10 +109,10 @@ export default function VocabularyPracticeView({ onGoToVocabulary }) {
     <div className="view-scroll vocabulary-practice-view">
       {!started ? (
         <section className="card practice-setup">
-          <p className="eyebrow">REPASO DE VOCABULARIO</p>
+          <p className="eyebrow">{isPhrase ? 'REPASO DE FRASES' : 'REPASO DE VOCABULARIO'}</p>
           <h3>Elige cómo quieres practicar</h3>
           <p className="practice-intro">
-            Usaremos {words.length === 1 ? 'la palabra' : `las ${words.length} palabras`} de tu
+            Usaremos {words.length === 1 ? `la ${singular}` : `las ${words.length} ${plural}`} de tu
             colección en un orden diferente cada vez.
           </p>
           <div className="vocabulary-modes">
@@ -123,7 +128,7 @@ export default function VocabularyPracticeView({ onGoToVocabulary }) {
             ))}
           </div>
           <button className="btn-primary btn-full" onClick={startPractice}>
-            Comenzar con {words.length} {words.length === 1 ? 'palabra' : 'palabras'}
+            Comenzar con {words.length} {words.length === 1 ? singular : plural}
           </button>
         </section>
       ) : (
@@ -132,7 +137,7 @@ export default function VocabularyPracticeView({ onGoToVocabulary }) {
             <span className="badge">
               {current.direction === 'en-es' ? 'Inglés → Español' : 'Español → Inglés'}
             </span>
-            <span className="phrase-counter">Palabra {index + 1} de {queue.length}</span>
+            <span className="phrase-counter">{isPhrase ? 'Frase' : 'Palabra'} {index + 1} de {queue.length}</span>
           </div>
           <div className="progress-track">
             <div className="progress-fill" style={{ width: `${((index + (feedback ? 1 : 0)) / queue.length) * 100}%` }} />
@@ -170,7 +175,7 @@ export default function VocabularyPracticeView({ onGoToVocabulary }) {
                   {!feedback.correct && <span>{feedback.expected}</span>}
                 </div>
                 <button className="btn-primary btn-full" type="button" onClick={nextWord}>
-                  {index === queue.length - 1 ? 'Ver resultado' : 'Siguiente palabra'}
+                  {index === queue.length - 1 ? 'Ver resultado' : `Siguiente ${singular}`}
                 </button>
               </>
             )}

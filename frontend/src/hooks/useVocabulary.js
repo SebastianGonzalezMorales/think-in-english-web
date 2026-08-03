@@ -65,8 +65,19 @@ export function VocabularyProvider({ children }) {
     } catch { refresh(); }
   }, [refresh]);
 
-  const value = useMemo(() => ({ words, loading, error, addWord, removeWord, recordAttempt, refresh }),
-    [words, loading, error, addWord, removeWord, recordAttempt, refresh]);
+  const personalWords = useMemo(() => words.filter((item) => item.type !== 'phrase'), [words]);
+  const phrases = useMemo(() => words.filter((item) => item.type === 'phrase'), [words]);
+  const value = useMemo(() => ({
+    items: words,
+    words: personalWords,
+    phrases,
+    loading,
+    error,
+    addWord,
+    removeWord,
+    recordAttempt,
+    refresh,
+  }), [words, personalWords, phrases, loading, error, addWord, removeWord, recordAttempt, refresh]);
   return createElement(VocabularyContext.Provider, { value }, children);
 }
 
