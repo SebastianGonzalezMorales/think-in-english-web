@@ -1,0 +1,70 @@
+export const prepositionLessons = [
+  {
+    id: 'place', title: 'Preposiciones de lugar', icon: '⌖',
+    description: 'Explican dónde está una persona, un objeto o un lugar.',
+    items: [
+      { word: 'in', meaning: 'dentro de', use: 'Algo está dentro de un espacio o área.', example: 'The keys are in the bag.', translation: 'Las llaves están dentro del bolso.' },
+      { word: 'on', meaning: 'sobre una superficie', use: 'Algo está en contacto con una superficie.', example: 'The book is on the table.', translation: 'El libro está sobre la mesa.' },
+      { word: 'at', meaning: 'en un punto o lugar específico', use: 'Indica una ubicación vista como un punto concreto.', example: 'She is at the station.', translation: 'Ella está en la estación.' },
+      { word: 'near', meaning: 'cerca de', use: 'Algo está a poca distancia. Near va directamente antes del lugar.', example: 'She lives near the station.', translation: 'Ella vive cerca de la estación.' },
+      { word: 'under', meaning: 'debajo de', use: 'Algo está en una posición inferior a otra cosa.', example: 'The cat is under the chair.', translation: 'El gato está debajo de la silla.' },
+    ],
+    questions: [
+      {
+        prompt: 'Completa: She lives ___ the station.', answers: ['near'],
+        explanation: 'Near significa “cerca de” y se coloca directamente antes de the station.',
+        mistakes: {
+          'near on': 'Near no necesita on. “Near on the station” combina dos preposiciones incompatibles.',
+          'near at': 'Near no necesita at. “Near at the station” combina dos formas distintas de expresar ubicación.',
+          on: 'On indica contacto con una superficie; no significa “cerca de”.',
+          at: 'At indica que ella vive exactamente en ese punto, no cerca de él.',
+        },
+      },
+      { prompt: 'Completa: The phone is ___ my pocket.', answers: ['in'], explanation: 'El teléfono está dentro del bolsillo, por eso usamos in.' },
+      { prompt: 'Completa: Your cup is ___ the desk.', answers: ['on'], explanation: 'La taza está apoyada sobre la superficie del escritorio.' },
+      { prompt: 'Completa: We are waiting ___ the entrance.', answers: ['at'], explanation: 'The entrance se presenta como un punto específico: at the entrance.' },
+      { prompt: 'Completa: The shoes are ___ the bed.', answers: ['under'], explanation: 'Under indica que los zapatos están debajo de la cama.' },
+      { prompt: 'Traduce: El dinero está dentro de la caja.', answers: ['The money is in the box'], explanation: 'Usamos in porque el dinero está dentro de la caja.' },
+      { prompt: 'Traduce: Hay una farmacia cerca del hotel.', answers: ['There is a pharmacy near the hotel', "There's a pharmacy near the hotel"], explanation: 'Near se coloca directamente antes de the hotel, sin on, at ni to.' },
+      { prompt: 'Traduce: Nos vemos en la estación.', answers: ['Meet me at the station', "Let's meet at the station", 'We will meet at the station', "We'll meet at the station"], explanation: 'At presenta la estación como el punto de encuentro.' },
+    ],
+  },
+  {
+    id: 'time', title: 'Preposiciones de tiempo', icon: '◷',
+    description: 'Explican cuándo ocurre una acción o un acontecimiento.',
+    items: [
+      { word: 'on', meaning: 'días y fechas', use: 'Se usa con días de la semana y fechas concretas.', example: 'I work on Mondays.', translation: 'Trabajo los lunes.' },
+      { word: 'in', meaning: 'meses, años y partes del día', use: 'Se usa con períodos amplios como meses, años, estaciones y partes del día.', example: 'I was born in 2000.', translation: 'Nací en el año 2000.' },
+      { word: 'at', meaning: 'horas y momentos específicos', use: 'Se usa con horas y puntos concretos del día.', example: 'The class starts at 9:00.', translation: 'La clase comienza a las 9:00.' },
+    ],
+    questions: [
+      { prompt: 'Completa: The meeting is ___ Monday.', answers: ['on'], explanation: 'Usamos on con días de la semana.' },
+      { prompt: 'Completa: She was born ___ July.', answers: ['in'], explanation: 'Usamos in con meses.' },
+      { prompt: 'Completa: The movie starts ___ 8:30.', answers: ['at'], explanation: 'Usamos at con una hora específica.' },
+      { prompt: 'Completa: We usually exercise ___ the morning.', answers: ['in'], explanation: 'Usamos in con partes del día: in the morning.' },
+      { prompt: 'Completa: My birthday is ___ May 12th.', answers: ['on'], explanation: 'Usamos on con una fecha concreta.' },
+      { prompt: 'Traduce: Estudio inglés por la noche.', answers: ['I study English at night'], explanation: 'At night es una expresión fija; no usamos in the night para esta rutina general.' },
+      { prompt: 'Traduce: Viajaremos en diciembre.', answers: ['We will travel in December', "We'll travel in December", 'We are going to travel in December', "We're going to travel in December"], explanation: 'Usamos in con meses.' },
+      { prompt: 'Traduce: La tienda cierra a las seis.', answers: ['The store closes at six', "The store closes at six o'clock", 'The shop closes at six', "The shop closes at six o'clock"], explanation: 'Usamos at con una hora específica.' },
+    ],
+  },
+  {
+    id: 'direction', title: 'Preposiciones de dirección', icon: '➜',
+    description: 'Explican hacia dónde se mueve alguien o algo, o desde dónde viene.',
+    items: [
+      { word: 'to', meaning: 'hacia', use: 'Indica el destino de un movimiento.', example: 'I go to school.', translation: 'Voy a la escuela.' },
+      { word: 'from', meaning: 'desde o proveniente de', use: 'Indica el origen o punto de partida.', example: 'She comes from Chile.', translation: 'Ella viene de Chile.' },
+      { word: 'into', meaning: 'hacia dentro', use: 'Describe un movimiento desde afuera hacia el interior.', example: 'He walks into the room.', translation: 'Él entra caminando a la habitación.' },
+    ],
+    questions: [
+      { prompt: 'Completa: They are going ___ the airport.', answers: ['to'], explanation: 'The airport es el destino del movimiento, por eso usamos to.' },
+      { prompt: 'Completa: This package came ___ Canada.', answers: ['from'], explanation: 'From indica el origen del paquete.' },
+      { prompt: 'Completa: She ran ___ the house.', answers: ['into'], explanation: 'Into muestra el movimiento desde afuera hacia el interior de la casa.' },
+      { prompt: 'Completa: We walked ___ the restaurant.', answers: ['to'], explanation: 'The restaurant es el destino.' },
+      { prompt: 'Completa: He took the keys ___ his pocket.', answers: ['from', 'out of'], explanation: 'From u out of pueden indicar que las llaves salieron del bolsillo.' },
+      { prompt: 'Traduce: Ella va al trabajo en autobús.', answers: ['She goes to work by bus'], explanation: 'To indica que work es el destino.' },
+      { prompt: 'Traduce: Somos de Chile.', answers: ['We are from Chile', "We're from Chile"], explanation: 'From indica origen o procedencia.' },
+      { prompt: 'Traduce: El perro corrió hacia dentro de la habitación.', answers: ['The dog ran into the room'], explanation: 'Into expresa el movimiento hacia el interior.' },
+    ],
+  },
+];

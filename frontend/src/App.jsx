@@ -7,6 +7,7 @@ import MistakesView from './components/MistakesView';
 import VocabularyView from './components/VocabularyView';
 import VocabularyPracticeView from './components/VocabularyPracticeView';
 import TensesView from './components/TensesView';
+import PrepositionsView from './components/PrepositionsView';
 import AuthView from './components/AuthView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { VocabularyProvider } from './hooks/useVocabulary';
@@ -20,6 +21,7 @@ const VIEWS = [
   { id: 'my-phrases', icon: '“”', label: 'Mis frases' },
   { id: 'phrases-practice', icon: '↔', label: 'Practicar frases' },
   { id: 'tenses', icon: 'T°', label: 'Tiempos verbales' },
+  { id: 'prepositions', icon: '⌖', label: 'Preposiciones' },
 ];
 
 const PAGE_TITLES = {
@@ -32,6 +34,7 @@ const PAGE_TITLES = {
   'my-phrases': 'Construye tu colección de frases',
   'phrases-practice': 'Practica tus frases',
   tenses: 'Comprende y usa los tiempos verbales',
+  prepositions: 'Comprende y usa las preposiciones',
 };
 
 function Shell() {
@@ -158,6 +161,7 @@ function Shell() {
           />
         )}
         {view === 'tenses' && <TensesView />}
+        {view === 'prepositions' && <PrepositionsView />}
       </main>
     </div>
   );

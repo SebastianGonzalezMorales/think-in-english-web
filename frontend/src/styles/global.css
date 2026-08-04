@@ -923,6 +923,16 @@ textarea:disabled { opacity: .6; cursor: default; }
 .tense-progress strong { color: var(--primary); font: 900 34px Manrope, sans-serif; }
 .tense-progress span { color: var(--muted); font-size: 11px; font-weight: 800; }
 .tense-progress small { margin-top: 3px; color: var(--muted); font-size: 10px; }
+.tense-daily-plan {
+  display: grid; grid-template-columns: auto auto minmax(220px, 1fr) auto;
+  align-items: center; gap: 12px; padding: 13px 16px;
+  border: 1px solid color-mix(in srgb, var(--success) 28%, var(--line));
+  border-radius: 15px; background: var(--success-soft);
+}
+.tense-daily-plan > span { color: var(--success); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.tense-daily-plan > strong { color: var(--text); font: 800 14px Manrope, sans-serif; }
+.tense-daily-plan > p { color: var(--muted); font-size: 12px; line-height: 1.45; }
+.tense-daily-plan > small { color: var(--success); font-size: 11px; font-weight: 900; }
 .tense-levels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .tense-level {
   display: flex; align-items: center; gap: 15px; text-align: left;
@@ -993,6 +1003,8 @@ textarea:disabled { opacity: .6; cursor: default; }
   .tense-periods button { flex: 1 0 auto; }
   .tense-quiz form { grid-template-columns: 1fr; }
   .tense-quiz form .field-label { grid-column: 1; }
+  .tense-daily-plan { grid-template-columns: auto 1fr; }
+  .tense-daily-plan > p, .tense-daily-plan > small { grid-column: 1 / -1; }
 }
 
 @media (max-width: 480px) {
@@ -1001,4 +1013,63 @@ textarea:disabled { opacity: .6; cursor: default; }
   .tense-level { align-items: flex-start; }
   .tense-feedback-heading { display: grid; }
   .tense-feedback-heading > span { justify-self: start; }
+}
+
+/* ─── Prepositions ─────────────────────────────────────────────────────────── */
+.prepositions-view { display: grid; gap: 18px; align-content: start; }
+.prepositions-intro {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  background: linear-gradient(135deg, var(--surface), var(--primary-soft));
+}
+.prepositions-intro h3 { font: 900 24px Manrope, sans-serif; }
+.prepositions-intro p:last-child { margin-top: 7px; color: var(--muted); line-height: 1.55; }
+.prepositions-intro > span {
+  flex-shrink: 0; padding: 8px 12px; border-radius: 999px;
+  color: var(--primary); background: var(--surface); font-size: 12px; font-weight: 900;
+}
+.preposition-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.preposition-tabs button { display: flex; align-items: center; gap: 12px; text-align: left; color: var(--muted); }
+.preposition-tabs button > span {
+  display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: 12px; color: var(--primary); background: var(--primary-soft); font-size: 18px; font-weight: 900;
+}
+.preposition-tabs button strong { display: block; margin-bottom: 3px; color: var(--text); font-size: 13px; }
+.preposition-tabs button small { font-size: 11px; }
+.preposition-tabs button.active { border-color: var(--primary); background: var(--primary-soft); }
+.preposition-description { margin: -4px 0 17px; color: var(--muted); }
+.preposition-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.preposition-card { padding: 15px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-soft); }
+.preposition-card > div { display: flex; align-items: baseline; gap: 9px; }
+.preposition-card > div strong { color: var(--primary); font: 900 20px Manrope, sans-serif; }
+.preposition-card > div span { color: var(--text); font-size: 12px; font-weight: 800; }
+.preposition-card > p { min-height: 38px; margin: 9px 0 12px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.preposition-card blockquote { display: grid; gap: 3px; padding-top: 11px; border-top: 1px solid var(--line); }
+.preposition-card blockquote strong { color: var(--text); font-size: 13px; }
+.preposition-card blockquote span { color: var(--muted); font-size: 11px; }
+.preposition-practice h3 { margin: 17px 0 4px; font: 800 19px/1.45 Manrope, sans-serif; }
+.preposition-practice .exercise-topline > div > strong { color: var(--muted); font-size: 11px; }
+.preposition-practice form { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 12px; }
+.preposition-practice form .field-label { grid-column: 1 / -1; margin-bottom: -5px; }
+.preposition-practice form > .btn-primary { min-height: 42px; }
+.preposition-feedback { grid-column: 1 / -1; padding: 14px; border-radius: 13px; }
+.preposition-feedback.success { color: var(--success); background: var(--success-soft); }
+.preposition-feedback.error { color: var(--danger); background: var(--danger-soft); }
+.preposition-feedback > div { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.preposition-feedback > div span {
+  flex-shrink: 0; padding: 4px 8px; border-radius: 999px;
+  color: var(--text); background: var(--surface); font-size: 11px; font-weight: 800;
+}
+.preposition-feedback p { margin: 6px 0 11px; font-size: 13px; line-height: 1.5; }
+
+@media (max-width: 760px) {
+  .preposition-tabs { grid-template-columns: 1fr; }
+  .preposition-practice form { grid-template-columns: 1fr; }
+  .preposition-practice form .field-label { grid-column: 1; }
+}
+
+@media (max-width: 480px) {
+  .prepositions-intro { display: grid; }
+  .prepositions-intro > span { justify-self: start; }
+  .preposition-feedback > div { display: grid; }
+  .preposition-feedback > div span { justify-self: start; }
 }
