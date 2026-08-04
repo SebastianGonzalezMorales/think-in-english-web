@@ -6,6 +6,7 @@ import ProgressView from './components/ProgressView';
 import MistakesView from './components/MistakesView';
 import VocabularyView from './components/VocabularyView';
 import VocabularyPracticeView from './components/VocabularyPracticeView';
+import TensesView from './components/TensesView';
 import AuthView from './components/AuthView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { VocabularyProvider } from './hooks/useVocabulary';
@@ -18,6 +19,7 @@ const VIEWS = [
   { id: 'vocabulary-practice', icon: '⇄', label: 'Practicar palabras' },
   { id: 'my-phrases', icon: '“”', label: 'Mis frases' },
   { id: 'phrases-practice', icon: '↔', label: 'Practicar frases' },
+  { id: 'tenses', icon: 'T°', label: 'Tiempos verbales' },
 ];
 
 const PAGE_TITLES = {
@@ -29,6 +31,7 @@ const PAGE_TITLES = {
   'vocabulary-practice': 'Practica tus palabras',
   'my-phrases': 'Construye tu colección de frases',
   'phrases-practice': 'Practica tus frases',
+  tenses: 'Comprende y usa los tiempos verbales',
 };
 
 function Shell() {
@@ -154,6 +157,7 @@ function Shell() {
             onGoToVocabulary={() => setView('my-phrases')}
           />
         )}
+        {view === 'tenses' && <TensesView />}
       </main>
     </div>
   );
