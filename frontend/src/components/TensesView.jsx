@@ -104,8 +104,8 @@ export default function TensesView() {
       <section className="tense-daily-plan" aria-label="Sugerencia de estudio">
         <span>SUGERENCIA DE ESTUDIO</span>
         <strong>Avanza a tu ritmo</strong>
-        <p>Puedes estudiar una estructura y completar sus 12 actividades antes de continuar. Si te sirve, prueba una por día.</p>
-        <small>12 estructuras · 144 actividades</small>
+        <p>Puedes estudiar una estructura y completar sus 25 actividades antes de continuar. Si te sirve, prueba una por día.</p>
+        <small>12 estructuras · 300 actividades</small>
       </section>
 
       <div className="tense-levels" aria-label="Nivel de aprendizaje">

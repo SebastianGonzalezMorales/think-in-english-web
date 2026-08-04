@@ -1,3 +1,5 @@
+import { extraTenseQuestions } from './extraTenseQuestions.js';
+
 export const TENSE_PERIODS = [
   { id: 'all', label: 'Todos' },
   { id: 'present', label: 'Presente' },
@@ -16,7 +18,7 @@ export const TENSE_LEVELS = {
   },
 };
 
-export const tenseLessons = [
+const baseTenseLessons = [
   {
     id: 'present-simple', level: 'conversation', period: 'present', title: 'Present Simple',
     summary: 'Rutinas, hechos y situaciones habituales.',
@@ -309,3 +311,8 @@ export const tenseLessons = [
     ],
   },
 ];
+
+export const tenseLessons = baseTenseLessons.map((lesson) => ({
+  ...lesson,
+  questions: [...lesson.questions, ...(extraTenseQuestions[lesson.id] ?? [])],
+}));
