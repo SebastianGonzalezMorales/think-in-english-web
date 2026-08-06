@@ -22,11 +22,31 @@ const baseTenseLessons = [
   {
     id: 'present-simple', level: 'conversation', period: 'present', title: 'Present Simple',
     summary: 'Rutinas, hechos y situaciones habituales.',
-    structure: 'Si el sujeto es I, you, we o they, usa el verbo en su forma original, sin “to” y sin cambiarlo. Ejemplos: I work · They study.\nSi el sujeto es he, she o it, agrega -s o -es al final del verbo. Ejemplos: He works · She studies.',
+    structure: 'Afirmación — I / you / we / they: sujeto + verbo base\nAfirmación — he / she / it: sujeto + verbo con -s o -es\nNegación: sujeto + do not / does not + verbo base\nPregunta: Do / Does + sujeto + verbo base?',
     rules: [
       'Para preguntar, empieza con do cuando el sujeto es I, you, we o they; usa does con he, she o it.',
       'Para negar, usa do not (don’t) o does not (doesn’t). Después de do o does, el verbo vuelve a su forma original.',
     ],
+    beException: {
+      description: 'Usa el verbo to be cuando la idea principal es ser o estar: estados, características, profesiones y ubicaciones.',
+      conjugationPrompt: '¿Cuál forma debo usar? Depende del sujeto.',
+      conjugations: [
+        { subjects: 'I', verb: 'am', examples: [['I am tired.', '']] },
+        { subjects: 'He / She / It', verb: 'is', examples: [['She is tired.', '']] },
+        { subjects: 'You / We / They', verb: 'are', examples: [['They are tired.', '']] },
+      ],
+      structures: [
+        'Afirmación: sujeto + am / is / are',
+        'Negación: sujeto + am not / is not / are not',
+        'Pregunta: Am / Is / Are + sujeto?',
+      ],
+      examples: ['She is tired.', 'He is a student.', 'They are at home.', 'Is she tired?', 'She is not tired.'],
+      note: 'Con el verbo to be no se usan do ni does.',
+      comparison: [
+        ['She works every day.', 'verbo de acción'],
+        ['She is tired.', 'verbo to be'],
+      ],
+    },
     examples: [
       ['I work from home on Fridays.', 'Trabajo desde casa los viernes.'],
       ['Does she speak English?', '¿Ella habla inglés?'],
@@ -44,6 +64,18 @@ const baseTenseLessons = [
       { prompt: 'Traduce: Él no conduce al trabajo.', answers: ["He doesn't drive to work", 'He does not drive to work'], explanation: 'Con he usamos does not y el verbo base drive.' },
       { prompt: 'Formula la pregunta: ¿Ella necesita ayuda?', answers: ['Does she need help'], explanation: 'La pregunta usa does y el verbo base need.' },
       { prompt: 'Formula la pregunta: ¿Con qué frecuencia estudian?', answers: ['How often do they study'], explanation: 'Después de how often usamos do + sujeto + verbo base.' },
+      { kind: 'be', prompt: 'Completa: She ___ tired.', answers: ['is'], explanation: 'Con she usamos is. Como to be expresa un estado, no usamos does.' },
+      { kind: 'be', prompt: 'Completa: They ___ at home.', answers: ['are'], explanation: 'Con they, la forma presente de to be es are.' },
+      { kind: 'be', prompt: 'Completa: ___ she tired?', answers: ['Is'], explanation: 'La pregunta con to be comienza con Is porque el sujeto es she; no usamos does.' },
+      { kind: 'be', prompt: 'Completa: We ___ not students.', answers: ['are'], explanation: 'Con we usamos are: We are not students.' },
+      { kind: 'be', prompt: 'Completa: I ___ an English teacher.', answers: ['am'], explanation: 'Con I usamos am para expresar una profesión.' },
+      { kind: 'be', prompt: 'Completa: He ___ at the office.', answers: ['is'], explanation: 'Con he usamos is para indicar una ubicación.' },
+      { kind: 'be', prompt: 'Completa: You ___ ready.', answers: ['are'], explanation: 'Con you, la forma presente de to be es are.' },
+      { kind: 'be', prompt: 'Completa: It ___ cold today.', answers: ['is'], explanation: 'Con it usamos is para describir el estado del tiempo.' },
+      { kind: 'be', prompt: 'Completa: I ___ not busy.', answers: ['am'], explanation: 'La negación con I se forma con am not.' },
+      { kind: 'be', prompt: 'Completa: He ___ not a student.', answers: ['is'], explanation: 'Con he usamos is not para negar una profesión o condición.' },
+      { kind: 'be', prompt: 'Completa: ___ they at school?', answers: ['Are'], explanation: 'La pregunta comienza con Are porque el sujeto es they.' },
+      { kind: 'be', prompt: 'Completa: ___ you ready?', answers: ['Are'], explanation: 'Con you, la pregunta comienza con Are; no usamos do.' },
     ],
   },
   {
@@ -74,7 +106,31 @@ const baseTenseLessons = [
     id: 'past-simple', level: 'conversation', period: 'past', title: 'Past Simple',
     summary: 'Acciones terminadas en un momento pasado.',
     structure: 'Afirmación: sujeto + verbo en pasado\nNegación: sujeto + did not + verbo base\nPregunta: Did + sujeto + verbo base?',
-    rules: ['Usa la forma pasada del verbo en afirmaciones.', 'Después de did o did not, usa el verbo base.'],
+    rules: [
+      'El pasado no cambia según el sujeto: I worked · you worked · he/she worked · we/they worked.',
+      'No existe una terminación especial como works en presente.',
+      'Después de did o did not, usa el verbo base.',
+    ],
+    beException: {
+      description: 'Was y were son las formas pasadas del verbo to be.',
+      usage: 'Usa was o were cuando la idea principal es ser o estar en el pasado: estados, características, profesiones o ubicaciones. Si expresa una acción, utiliza el verbo correspondiente en pasado.',
+      conjugationPrompt: '¿Cuál debo usar? Depende del sujeto.',
+      conjugations: [
+        { subjects: 'I / He / She / It', verb: 'was', examples: [['She was tired.', 'Ella estaba cansada.'], ['He was a student.', 'Él era estudiante.']] },
+        { subjects: 'You / We / They', verb: 'were', examples: [['They were at home.', 'Ellos estaban en casa.']] },
+      ],
+      structures: [
+        'Afirmación: sujeto + was o were, según el sujeto',
+        'Negación: sujeto + was not / were not',
+        'Pregunta: Was / Were + sujeto?',
+      ],
+      examples: ['Was she tired?', 'They were not at home.'],
+      note: 'Con was y were no se usa did.',
+      comparison: [
+        ['She worked yesterday.', 'Acción: worked = trabajó'],
+        ['She was tired yesterday.', 'Estado: was tired = estaba cansada'],
+      ],
+    },
     examples: [
       ['I called her yesterday.', 'La llamé ayer.'],
       ['Did you enjoy the trip?', '¿Disfrutaste el viaje?'],
@@ -92,6 +148,18 @@ const baseTenseLessons = [
       { prompt: 'Traduce: No fueron a la reunión.', answers: ["They didn't go to the meeting", 'They did not go to the meeting'], explanation: 'Después de did not usamos go, no went.' },
       { prompt: 'Formula la pregunta: ¿Por qué llamaste?', answers: ['Why did you call'], explanation: 'Después de why usamos did + sujeto + verbo base.' },
       { prompt: 'Formula la pregunta: ¿Dónde encontraron eso?', answers: ['Where did they find that', 'Where did they find it'], explanation: 'Después de did usamos find en su forma original.' },
+      { kind: 'be', prompt: 'Completa: She ___ tired yesterday.', answers: ['was'], explanation: 'Con she usamos was para expresar un estado en el pasado; no usamos did.' },
+      { kind: 'be', prompt: 'Completa: They ___ at home.', answers: ['were'], explanation: 'Con they, la forma pasada de to be es were.' },
+      { kind: 'be', prompt: 'Completa: ___ she tired?', answers: ['Was'], explanation: 'La pregunta comienza con Was porque el sujeto es she; con to be no usamos did.' },
+      { kind: 'be', prompt: 'Completa: We ___ not at school.', answers: ['were'], explanation: 'Con we usamos were: We were not at school.' },
+      { kind: 'be', prompt: 'Completa: I ___ sick last week.', answers: ['was'], explanation: 'Con I usamos was para expresar un estado en el pasado.' },
+      { kind: 'be', prompt: 'Completa: He ___ a teacher years ago.', answers: ['was'], explanation: 'Con he usamos was para hablar de una profesión pasada.' },
+      { kind: 'be', prompt: 'Completa: You ___ late yesterday.', answers: ['were'], explanation: 'Con you, la forma pasada de to be es were.' },
+      { kind: 'be', prompt: 'Completa: We ___ in Santiago last weekend.', answers: ['were'], explanation: 'Con we usamos were para indicar una ubicación pasada.' },
+      { kind: 'be', prompt: 'Completa: She ___ not at home.', answers: ['was'], explanation: 'Con she usamos was not para negar una ubicación pasada.' },
+      { kind: 'be', prompt: 'Completa: They ___ not ready.', answers: ['were'], explanation: 'Con they usamos were not para negar un estado pasado.' },
+      { kind: 'be', prompt: 'Completa: ___ they at the party?', answers: ['Were'], explanation: 'La pregunta comienza con Were porque el sujeto es they.' },
+      { kind: 'be', prompt: 'Completa: ___ it cold yesterday?', answers: ['Was'], explanation: 'La pregunta comienza con Was porque el sujeto es it; no usamos did.' },
     ],
   },
   {
@@ -314,5 +382,9 @@ const baseTenseLessons = [
 
 export const tenseLessons = baseTenseLessons.map((lesson) => ({
   ...lesson,
-  questions: [...lesson.questions, ...(extraTenseQuestions[lesson.id] ?? [])],
+  questions: [...lesson.questions, ...(extraTenseQuestions[lesson.id] ?? [])].map((question, index) => ({
+    ...question,
+    kind: question.kind ?? 'action',
+    progressId: `${lesson.id}-${index}`,
+  })),
 }));

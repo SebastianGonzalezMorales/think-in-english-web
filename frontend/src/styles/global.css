@@ -965,21 +965,85 @@ textarea:disabled { opacity: .6; cursor: default; }
 .tense-content { display: grid; gap: 16px; }
 .tense-theory .eyebrow { text-transform: uppercase; }
 .tense-summary { margin: -4px 0 15px; color: var(--muted); }
-.tense-formula { padding: 15px; border-radius: 13px; background: var(--primary-soft); }
-.tense-formula span { display: block; margin-bottom: 5px; color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.tense-theory-grid { display: grid; grid-template-columns: minmax(240px, .72fr) minmax(0, 1.28fr); gap: 20px; align-items: start; }
+.tense-formula { display: grid; gap: 10px; }
+.tense-formula-group { padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent); border-radius: 13px; background: var(--primary-soft); }
+.tense-formula-group.exception { border-color: color-mix(in srgb, var(--warning) 35%, transparent); background: var(--warning-soft); }
+.tense-formula-group h4 { margin-bottom: 4px; color: var(--primary); font: 900 11px Manrope, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.tense-formula-group.exception h4 { color: var(--warning); }
+.tense-formula-label { display: block; margin-bottom: 3px; color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+.tense-formula-value { color: var(--text); font-size: 12px; font-weight: 800; line-height: 1.45; }
 .tense-formula-line { display: grid; gap: 5px; color: var(--text); font-size: 14px; line-height: 1.65; }
-.tense-formula-line + .tense-formula-line { margin-top: 12px; padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); }
+.tense-formula-line + .tense-formula-line { margin-top: 7px; padding-top: 7px; border-top: 1px solid color-mix(in srgb, var(--primary) 15%, transparent); }
+.tense-formula-group.exception .tense-formula-line + .tense-formula-line { border-top-color: color-mix(in srgb, var(--warning) 20%, transparent); }
+.tense-be-exception { display: grid; grid-template-columns: 1fr .9fr 1.15fr; gap: 18px; margin-top: 16px; padding: 14px; border: 1px solid color-mix(in srgb, var(--warning) 35%, transparent); border-radius: 13px; background: var(--warning-soft); }
+.tense-be-intro, .tense-be-section { min-width: 0; }
+.tense-be-heading { display: flex; align-items: baseline; gap: 7px; }
+.tense-be-heading span { margin: 0; color: var(--warning); font-size: 9px; font-weight: 900; letter-spacing: .1em; }
+.tense-be-heading h4 { color: var(--text); font: 900 14px Manrope, sans-serif; }
+.tense-be-description { margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.tense-be-usage { margin-top: 9px; padding: 8px 9px; border-left: 3px solid var(--warning); border-radius: 0 8px 8px 0; background: color-mix(in srgb, var(--warning) 8%, var(--surface)); }
+.tense-be-usage > strong { color: var(--warning); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.tense-be-usage p { margin-top: 3px; color: var(--text); font-size: 11px; line-height: 1.4; }
+.tense-be-prompt { margin-top: 9px; color: var(--text); font-size: 11px; font-weight: 850; }
+.tense-be-conjugations { display: flex; flex-wrap: wrap; gap: 6px; }
+.tense-be-conjugations { margin-top: 9px; }
+.tense-be-conjugations strong { padding: 5px 8px; border-radius: 8px; color: var(--warning); background: var(--surface); font-size: 11px; }
+.tense-be-choice { display: grid; min-width: 180px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--warning) 25%, transparent); border-radius: 9px; background: var(--surface); }
+.tense-be-choice strong { display: flex; justify-content: space-between; gap: 8px; padding: 6px 8px; border-radius: 0; }
+.tense-be-choice strong span { color: var(--text); }
+.tense-be-choice strong b { color: var(--warning); }
+.tense-be-choice-examples { display: grid; }
+.tense-be-choice small { display: grid; grid-template-columns: auto 1fr; gap: 6px; padding: 5px 8px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+.tense-be-choice small b { color: var(--text); }
+.tense-be-exception h5 { margin: 0 0 6px; color: var(--text); font: 850 11px Manrope, sans-serif; text-transform: uppercase; letter-spacing: .06em; }
+.tense-be-structure { padding: 5px 0; color: var(--text); font-size: 11px; line-height: 1.4; border-top: 1px solid color-mix(in srgb, var(--warning) 18%, transparent); }
+.tense-be-structure:first-of-type { border-top: 0; padding-top: 0; }
+.tense-be-examples { display: flex; flex-wrap: wrap; gap: 5px; }
+.tense-be-examples span { padding: 4px 7px; border-radius: 7px; color: var(--text); background: var(--surface); font-size: 11px; }
+.tense-be-note { margin-top: 9px; padding: 7px 9px; border-radius: 8px; color: var(--warning); background: color-mix(in srgb, var(--warning) 10%, var(--surface)); font-size: 11px; font-weight: 850; }
+.tense-be-comparison { padding-top: 9px; border-top: 1px solid color-mix(in srgb, var(--warning) 22%, transparent); }
+.tense-be-comparison p { display: grid; grid-template-columns: minmax(140px, auto) minmax(0, 1fr); align-items: baseline; gap: 8px; font-size: 11px; line-height: 1.45; }
+.tense-be-comparison p + p { margin-top: 4px; }
+.tense-be-comparison span { color: var(--warning); font-weight: 800; }
+.tense-be-exception.compact { grid-template-columns: 1fr 1fr; }
+.tense-be-exception.compact .tense-be-intro { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(180px, 1fr) auto; align-items: center; gap: 8px 16px; padding-bottom: 10px; border-bottom: 1px solid color-mix(in srgb, var(--warning) 22%, transparent); }
+.tense-be-exception.compact .tense-be-description { margin: 0; }
+.tense-be-exception.compact .tense-be-note { grid-column: 3; grid-row: 1; margin: 0; }
+.tense-be-exception.compact .tense-be-usage { grid-column: 1 / -1; grid-row: 2; margin: 0; }
+.tense-be-exception.compact .tense-be-prompt { grid-column: 1 / -1; grid-row: 2; margin: 0; }
+.tense-be-exception.compact .tense-be-conjugations { grid-column: 1 / -1; grid-row: 3; margin: 0; }
+.tense-be-exception.compact.has-usage .tense-be-prompt { grid-row: 3; }
+.tense-be-exception.compact.has-usage .tense-be-conjugations { grid-row: 4; }
 .tense-formula-line strong {
   justify-self: start; padding: 4px 8px; border-radius: 7px;
   color: var(--primary); background: var(--surface); font-size: 13px;
 }
-.tense-details { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 20px; }
+.tense-details { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 20px; }
 .tense-details h4 { margin-bottom: 10px; font: 800 14px Manrope, sans-serif; }
-.tense-details ul { margin: 0; padding-left: 19px; color: var(--muted); font-size: 13px; line-height: 1.6; }
-.tense-example { display: grid; gap: 3px; padding: 10px 0; border-top: 1px solid var(--line); }
-.tense-example:first-of-type { border-top: 0; padding-top: 0; }
+.tense-details ul { display: grid; gap: 7px; margin: 0; padding: 0; color: var(--muted); font-size: 12px; line-height: 1.45; list-style: none; }
+.tense-details li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 6px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-soft); }
+.tense-details li::before { content: '✓'; color: var(--primary); font-weight: 900; }
+.tense-theory-grid.restructured { grid-template-columns: 1fr; gap: 14px; }
+.tense-theory-grid.restructured .tense-formula-group { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 12px; }
+.tense-theory-grid.restructured.present-simple .tense-formula-group { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.tense-theory-grid.restructured .tense-formula-group > h4 { grid-column: 1 / -1; margin: 0 2px; }
+.tense-theory-grid.restructured .tense-formula-line { gap: 4px; min-height: 68px; padding: 10px; border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); border-radius: 9px; background: var(--surface); }
+.tense-theory-grid.restructured .tense-formula-line + .tense-formula-line { margin: 0; padding: 10px; }
+.tense-theory-grid.restructured .tense-details { grid-template-columns: minmax(0, 1.35fr) minmax(220px, .65fr); gap: 14px; }
+.tense-theory-grid.restructured .tense-details ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tense-theory-grid.restructured .tense-details li { align-content: start; }
+.tense-examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.tense-example { display: grid; align-content: start; gap: 3px; padding: 9px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .tense-example strong { font-size: 13px; }
 .tense-example span { color: var(--muted); font-size: 12px; }
+.tense-practice-switch { display: inline-flex; gap: 5px; margin-top: 12px; padding: 4px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface-soft); }
+.tense-practice-switch button { padding: 7px 11px; border-radius: 8px; color: var(--muted); font-size: 11px; font-weight: 850; }
+.tense-practice-switch button.active { color: #fff; background: var(--primary); }
+.tense-practice-switch button:last-child.active { color: var(--text); background: var(--warning-soft); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--warning) 35%, transparent); }
+.tense-practice-help { margin-top: 8px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+.tense-question-kind { display: inline-flex; margin-top: 12px; padding: 4px 8px; border-radius: 999px; color: var(--primary); background: var(--primary-soft); font-size: 10px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
+.tense-question-kind.be { color: var(--warning); background: var(--warning-soft); }
 .tense-quiz h3 { margin: 14px 0 2px; font: 800 18px/1.45 Manrope, sans-serif; }
 .tense-quiz form { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 12px; }
 .tense-quiz form .field-label { grid-column: 1 / -1; margin-bottom: -5px; }
@@ -997,14 +1061,21 @@ textarea:disabled { opacity: .6; cursor: default; }
 @media (max-width: 760px) {
   .tenses-intro { align-items: flex-start; }
   .tense-progress { min-width: 86px; }
-  .tense-levels, .tenses-layout, .tense-details { grid-template-columns: 1fr; }
+  .tense-levels, .tenses-layout, .tense-theory-grid, .tense-details { grid-template-columns: 1fr; }
   .tense-list { position: static; }
   .tense-periods { justify-self: stretch; overflow-x: auto; }
   .tense-periods button { flex: 1 0 auto; }
   .tense-quiz form { grid-template-columns: 1fr; }
   .tense-quiz form .field-label { grid-column: 1; }
+  .tense-practice-switch { display: grid; grid-template-columns: 1fr 1fr; }
   .tense-daily-plan { grid-template-columns: auto 1fr; }
   .tense-daily-plan > p, .tense-daily-plan > small { grid-column: 1 / -1; }
+  .tense-be-exception { grid-template-columns: 1fr; gap: 14px; }
+  .tense-be-exception.compact { grid-template-columns: 1fr; }
+  .tense-be-exception.compact .tense-be-intro { grid-column: 1; display: block; }
+  .tense-be-exception.compact .tense-be-description, .tense-be-exception.compact .tense-be-usage, .tense-be-exception.compact .tense-be-prompt, .tense-be-exception.compact .tense-be-conjugations, .tense-be-exception.compact .tense-be-note { margin-top: 9px; }
+  .tense-theory-grid.restructured .tense-formula-group, .tense-theory-grid.restructured .tense-details, .tense-theory-grid.restructured .tense-details ul { grid-template-columns: 1fr; }
+  .tense-theory-grid.restructured .tense-formula-line { min-height: 0; }
 }
 
 @media (max-width: 480px) {
@@ -1013,6 +1084,8 @@ textarea:disabled { opacity: .6; cursor: default; }
   .tense-level { align-items: flex-start; }
   .tense-feedback-heading { display: grid; }
   .tense-feedback-heading > span { justify-self: start; }
+  .tense-examples { grid-template-columns: 1fr; }
+  .tense-be-comparison p { grid-template-columns: 1fr; gap: 1px; }
 }
 
 /* ─── Prepositions ─────────────────────────────────────────────────────────── */
