@@ -3,6 +3,7 @@ import { similarity } from '../utils/utils';
 import { TENSE_LEVELS, TENSE_PERIODS, tenseLessons } from '../data/tenseLessons';
 
 const STORAGE_KEY = 'englishTrainerTenseProgress';
+const POSITION_STORAGE_KEY = 'englishTrainerTensePositions';
 
 const PRACTICE_HELP = {
   'present-simple': {
@@ -17,6 +18,11 @@ const PRACTICE_HELP = {
 
 function savedProgress() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? {}; }
+  catch { return {}; }
+}
+
+function savedPositions() {
+  try { return JSON.parse(localStorage.getItem(POSITION_STORAGE_KEY)) ?? {}; }
   catch { return {}; }
 }
 
@@ -48,6 +54,17 @@ function Formation({ text }) {
   ));
 }
 
+function KeyRule({ text }) {
+  const separator = text.indexOf(' → ');
+  if (separator < 0) return <span>{text}</span>;
+  return (
+    <div className="tense-rule-content">
+      <strong className="tense-rule-keyword">{text.slice(0, separator)}</strong>
+      <span>{text.slice(separator + 3)}</span>
+    </div>
+  );
+}
+
 function BeException({ content, compact = false }) {
   return (
     <section className={`tense-be-exception${compact ? ' compact' : ''}${content.usage ? ' has-usage' : ''}`} aria-label="Excepción: verbo to be">
@@ -75,6 +92,30 @@ function BeException({ content, compact = false }) {
         </div>
         <p className="tense-be-note">{content.note}</p>
       </div>
+      {content.nounAgreement && (
+        <div className="tense-be-noun-agreement">
+          <div className="tense-be-noun-heading">
+            <h5>{content.nounAgreement.title}</h5>
+            <p>{content.nounAgreement.intro}</p>
+          </div>
+          <div className="tense-be-noun-groups">
+            {content.nounAgreement.groups.map((group) => (
+              <div className="tense-be-noun-group" key={group.label}>
+                <strong>{group.label}</strong>
+                <div className="tense-be-noun-examples">
+                  {group.examples.map(([english, spanish]) => (
+                    <small key={english}><b>{english}</b><span>{spanish}</span></small>
+                  ))}
+                </div>
+                <div className="tense-be-equivalences">
+                  {group.equivalences.map((item) => <span key={item}>{item}</span>)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="tense-be-you-note"><strong>Importante:</strong> {content.nounAgreement.youNote}</p>
+        </div>
+      )}
       <div className="tense-be-section">
         <h5>Estructuras</h5>
         {content.structures.map((item) => <p className="tense-be-structure" key={item}>{item}</p>)}
@@ -90,6 +131,45 @@ function BeException({ content, compact = false }) {
             <p key={example}><span>{label}</span><strong>{example}</strong></p>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function WhoQuestions({ content }) {
+  return (
+    <section className="tense-who-questions" aria-label="Preguntas con Who">
+      <div className="tense-who-heading">
+        <div>
+          <span>ACLARACIÓN</span>
+          <h4>{content.title}</h4>
+        </div>
+        <p>{content.intro}</p>
+      </div>
+      <div className="tense-who-cards">
+        {content.cases.map((item) => (
+          <article key={item.label}>
+            <strong>{item.label}</strong>
+            <p className="tense-who-explanation">{item.explanation}</p>
+            <b>{item.structure}</b>
+            <div className="tense-who-case-examples">
+              {item.examples.map(([english, spanish]) => (
+                <p key={english}><span>{english}</span><small>{spanish}</small></p>
+              ))}
+            </div>
+            <em>{item.help}</em>
+          </article>
+        ))}
+      </div>
+      <div className="tense-who-comparison">
+        <h5>Compara</h5>
+        {content.comparison.map(([english, spanish, explanation]) => (
+          <p key={english}><strong>{english}</strong><span>{spanish}</span><small>{explanation}</small></p>
+        ))}
+      </div>
+      <div className="tense-who-rule">
+        <strong>{content.supportQuestion}</strong>
+        {content.quickRules.map((rule) => <p key={rule}>{rule}</p>)}
       </div>
     </section>
   );
@@ -133,10 +213,22 @@ export default function TensesView() {
 
   useEffect(() => {
     setExerciseKind('action');
-    setQuestionIndex(0);
     setAnswer('');
     setFeedback(null);
   }, [lessonId]);
+
+  useEffect(() => {
+    if (!practiceQuestions.length) return;
+    const positionKey = `${lesson.id}:${exerciseKind}`;
+    const storedPosition = savedPositions()[positionKey];
+    const firstPending = practiceQuestions.findIndex((item) => !progress[item.progressId]);
+    const restoredPosition = Number.isInteger(storedPosition) && storedPosition < practiceQuestions.length
+      ? storedPosition
+      : firstPending >= 0 ? firstPending : 0;
+    setQuestionIndex(restoredPosition);
+    setAnswer('');
+    setFeedback(null);
+  }, [lesson.id, exerciseKind]);
 
   const checkAnswer = (event) => {
     event.preventDefault();
@@ -163,7 +255,13 @@ export default function TensesView() {
   };
 
   const nextQuestion = () => {
-    setQuestionIndex((current) => (current + 1) % practiceQuestions.length);
+    setQuestionIndex((current) => {
+      const nextIndex = (current + 1) % practiceQuestions.length;
+      const positions = savedPositions();
+      positions[`${lesson.id}:${exerciseKind}`] = nextIndex;
+      localStorage.setItem(POSITION_STORAGE_KEY, JSON.stringify(positions));
+      return nextIndex;
+    });
     setAnswer('');
     setFeedback(null);
   };
@@ -232,19 +330,20 @@ export default function TensesView() {
                   <Formation text={lesson.structure} />
                 </div>
                 <div className="tense-details">
-                  <div><h4>Reglas clave</h4><ul>{lesson.rules.map((rule) => <li key={rule}>{rule}</li>)}</ul></div>
+                  <div><h4>Reglas clave</h4><ul>{lesson.rules.map((rule) => <li key={rule}><KeyRule text={rule} /></li>)}</ul></div>
                   <div><h4>Ejemplos</h4><div className="tense-examples">{lesson.examples.map(([english, spanish]) => <div className="tense-example" key={english}><strong>{english}</strong><span>{spanish}</span></div>)}</div></div>
                 </div>
               </div>
               {lesson.beException && <BeException content={lesson.beException} compact={['present-simple', 'past-simple'].includes(lesson.id)} />}
+              {lesson.whoQuestions && <WhoQuestions content={lesson.whoQuestions} />}
             </section>
 
             <section className="card tense-quiz">
               <div className="exercise-topline"><span className="eyebrow">PONLO EN PRÁCTICA</span><span className="counter">Pregunta {safeQuestionIndex + 1} de {practiceQuestions.length}</span></div>
               {hasSplitPractice && (
                 <div className="tense-practice-switch" aria-label="Tipo de verbo">
-                  <button type="button" className={exerciseKind === 'action' ? 'active' : ''} onClick={() => { setExerciseKind('action'); setQuestionIndex(0); setAnswer(''); setFeedback(null); }}>Verbos normales</button>
-                  <button type="button" className={exerciseKind === 'be' ? 'active' : ''} onClick={() => { setExerciseKind('be'); setQuestionIndex(0); setAnswer(''); setFeedback(null); }}>Verbo to be</button>
+                  <button type="button" className={exerciseKind === 'action' ? 'active' : ''} onClick={() => setExerciseKind('action')}>Verbos normales</button>
+                  <button type="button" className={exerciseKind === 'be' ? 'active' : ''} onClick={() => setExerciseKind('be')}>Verbo to be</button>
                 </div>
               )}
               {hasSplitPractice && <p className="tense-practice-help">{PRACTICE_HELP[lesson.id][exerciseKind]}</p>}

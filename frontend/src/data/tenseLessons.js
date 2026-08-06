@@ -24,8 +24,9 @@ const baseTenseLessons = [
     summary: 'Rutinas, hechos y situaciones habituales.',
     structure: 'Afirmación — I / you / we / they: sujeto + verbo base\nAfirmación — he / she / it: sujeto + verbo con -s o -es\nNegación: sujeto + do not / does not + verbo base\nPregunta: Do / Does + sujeto + verbo base?',
     rules: [
-      'Para preguntar, empieza con do cuando el sujeto es I, you, we o they; usa does con he, she o it.',
-      'Para negar, usa do not (don’t) o does not (doesn’t). Después de do o does, el verbo vuelve a su forma original.',
+      'Do → I / You / We / They. Pregunta: Do you work? Negación: They don’t work.',
+      'Does → He / She / It. Pregunta: Does she work? Negación: He doesn’t work.',
+      'Después de do, does, don’t o doesn’t, el verbo siempre queda en su forma original: work, no works.',
     ],
     beException: {
       description: 'Usa el verbo to be cuando la idea principal es ser o estar: estados, características, profesiones y ubicaciones.',
@@ -105,11 +106,11 @@ const baseTenseLessons = [
   {
     id: 'past-simple', level: 'conversation', period: 'past', title: 'Past Simple',
     summary: 'Acciones terminadas en un momento pasado.',
-    structure: 'Afirmación: sujeto + verbo en pasado\nNegación: sujeto + did not + verbo base\nPregunta: Did + sujeto + verbo base?',
+    structure: 'Afirmación — Todos los sujetos: Sujeto + verbo en pasado Ejemplos: I worked · She worked · They worked\nNegación — Todos los sujetos: Sujeto + did not + verbo base\nPregunta — Todos los sujetos: Did + sujeto + verbo base?',
     rules: [
-      'El pasado no cambia según el sujeto: I worked · you worked · he/she worked · we/they worked.',
-      'No existe una terminación especial como works en presente.',
-      'Después de did o did not, usa el verbo base.',
+      'Did → Todos los sujetos: I / You / He / She / It / We / They. Pregunta: Did she work?',
+      'Didn’t → Todos los sujetos. Negación: They didn’t work. También puedes usar did not.',
+      'El verbo va en pasado solo en afirmaciones. Después de did o didn’t, siempre queda en su forma original: work, no worked.',
     ],
     beException: {
       description: 'Was y were son las formas pasadas del verbo to be.',
@@ -119,6 +120,15 @@ const baseTenseLessons = [
         { subjects: 'I / He / She / It', verb: 'was', examples: [['She was tired.', 'Ella estaba cansada.'], ['He was a student.', 'Él era estudiante.']] },
         { subjects: 'You / We / They', verb: 'were', examples: [['They were at home.', 'Ellos estaban en casa.']] },
       ],
+      nounAgreement: {
+        title: 'Singular y plural con was y were',
+        intro: 'Un sustantivo singular equivale a he, she o it y usa was. Un sustantivo plural equivale a they y usa were.',
+        groups: [
+          { label: 'Sujeto singular → was', examples: [['The word was new.', 'La palabra era nueva.'], ['My answer was correct.', 'Mi respuesta era correcta.'], ['The activity was difficult.', 'La actividad era difícil.']], equivalences: ['The exercise → it → was', 'My answer → it → was'] },
+          { label: 'Sujeto plural → were', examples: [['The words were new.', 'Las palabras eran nuevas.'], ['My answers were correct.', 'Mis respuestas eran correctas.'], ['The activities were difficult.', 'Las actividades eran difíciles.']], equivalences: ['The exercises → they → were', 'My answers → they → were'] },
+        ],
+        youNote: 'You siempre usa were, tanto para una persona como para varias: You were tired significa “Tú estabas cansado/a” o “Ustedes estaban cansados/as”.',
+      },
       structures: [
         'Afirmación: sujeto + was o were, según el sujeto',
         'Negación: sujeto + was not / were not',
@@ -131,21 +141,50 @@ const baseTenseLessons = [
         ['She was tired yesterday.', 'Estado: was tired = estaba cansada'],
       ],
     },
+    whoQuestions: {
+      title: 'Preguntas con Who',
+      intro: 'Who puede realizar la acción o recibir la acción. La estructura depende de quién hace la acción.',
+      cases: [
+        {
+          label: 'Who realiza la acción',
+          explanation: 'Cuando who representa a la persona que hace la acción, who es el sujeto. No usamos did y el verbo va en pasado.',
+          structure: 'Who + verbo en pasado + complemento?',
+          examples: [['Who called you?', '¿Quién te llamó?'], ['Who sent the message?', '¿Quién envió el mensaje?']],
+          help: 'Who hace la acción → no usamos did.',
+        },
+        {
+          label: 'Otra persona realiza la acción',
+          explanation: 'Cuando aparece otro sujeto, como you, he o they, ese sujeto realiza la acción. Who representa a la persona que recibe la acción. En este caso usamos did y el verbo base.',
+          structure: 'Who + did + sujeto + verbo base + complemento?',
+          examples: [['Who did you call?', '¿A quién llamaste?'], ['Who did she invite?', '¿A quién invitó ella?']],
+          help: 'Otro sujeto hace la acción → usamos did.',
+        },
+      ],
+      comparison: [
+        ['Who called you?', '¿Quién te llamó?', 'Who realiza la acción.'],
+        ['Who did you call?', '¿A quién llamaste?', 'You realiza la acción.'],
+      ],
+      supportQuestion: '¿Quién hace la acción?',
+      quickRules: [
+        'Who hace la acción → verbo en pasado, sin did.',
+        'Aparece otro sujeto que hace la acción → did + verbo base.',
+      ],
+    },
     examples: [
       ['I called her yesterday.', 'La llamé ayer.'],
       ['Did you enjoy the trip?', '¿Disfrutaste el viaje?'],
     ],
     questions: [
       { prompt: 'Completa: We ___ (go) to the beach last weekend.', answers: ['went'], explanation: 'Go es irregular: su pasado es went.' },
-      { prompt: 'Traduce: No vi tu mensaje.', answers: ["I didn't see your message", 'I did not see your message'], explanation: 'Después de did not usamos see, no saw.' },
+      { prompt: 'Traduce: No vi tu mensaje.', answers: ["I didn't see your message", 'I did not see your message'], explanation: 'Después de “did not” usamos see, no saw.' },
       { prompt: 'Completa: She ___ (buy) a new laptop yesterday.', answers: ['bought'], explanation: 'Buy es irregular: su pasado es bought.' },
       { prompt: 'Traduce: Ayer llegamos temprano.', answers: ['We arrived early yesterday', 'Yesterday, we arrived early'], explanation: 'La acción terminó ayer, por eso usamos arrived.' },
       { prompt: 'Formula la pregunta: ¿Viste la película?', answers: ['Did you see the movie', 'Did you see the film'], explanation: 'La pregunta comienza con did y usa see en su forma original.' },
       { prompt: 'Formula la pregunta: ¿Cuándo llegó ella?', answers: ['When did she arrive'], explanation: 'Después de did usamos arrive, no arrived.' },
       { prompt: 'Completa: They ___ (meet) at university.', answers: ['met'], explanation: 'Meet es irregular: su pasado es met.' },
-      { prompt: 'Completa: He ___ not ___ (understand) the question.', answers: ['did not understand', "didn't understand"], explanation: 'Después de did not usamos understand en su forma original.' },
+      { prompt: 'Completa: He ___ not ___ (understand) the question.', answers: ['did not understand', "didn't understand"], explanation: 'Después de “did not” usamos understand en su forma original.' },
       { prompt: 'Traduce: Perdí mis llaves esta mañana.', answers: ['I lost my keys this morning'], explanation: 'Lose es irregular: su pasado es lost.' },
-      { prompt: 'Traduce: No fueron a la reunión.', answers: ["They didn't go to the meeting", 'They did not go to the meeting'], explanation: 'Después de did not usamos go, no went.' },
+      { prompt: 'Traduce: No fueron a la reunión.', answers: ["They didn't go to the meeting", 'They did not go to the meeting'], explanation: 'Después de “did not” usamos go, no went.' },
       { prompt: 'Formula la pregunta: ¿Por qué llamaste?', answers: ['Why did you call'], explanation: 'Después de why usamos did + sujeto + verbo base.' },
       { prompt: 'Formula la pregunta: ¿Dónde encontraron eso?', answers: ['Where did they find that', 'Where did they find it'], explanation: 'Después de did usamos find en su forma original.' },
       { kind: 'be', prompt: 'Completa: She ___ tired yesterday.', answers: ['was'], explanation: 'Con she usamos was para expresar un estado en el pasado; no usamos did.' },

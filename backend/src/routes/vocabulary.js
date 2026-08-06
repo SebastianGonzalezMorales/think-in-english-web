@@ -7,8 +7,8 @@ export const vocabularyRouter = Router();
 vocabularyRouter.use(requireAuth);
 
 const itemSchema = z.object({
-  english: z.string().trim().min(1).max(300),
-  spanish: z.string().trim().min(1).max(300),
+  english: z.string().trim().min(1, 'Escribe la palabra o frase en inglés antes de guardarla.').max(300, 'El texto en inglés es demasiado largo.'),
+  spanish: z.string().trim().min(1, 'Escribe el significado en español antes de guardarlo.').max(300, 'El texto en español es demasiado largo.'),
   context: z.string().trim().max(1000).default(''),
   type: z.enum(['word', 'phrase']).default('word'),
 });

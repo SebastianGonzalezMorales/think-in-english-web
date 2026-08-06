@@ -989,6 +989,19 @@ textarea:disabled { opacity: .6; cursor: default; }
 .tense-be-conjugations { display: flex; flex-wrap: wrap; gap: 6px; }
 .tense-be-conjugations { margin-top: 9px; }
 .tense-be-conjugations strong { padding: 5px 8px; border-radius: 8px; color: var(--warning); background: var(--surface); font-size: 11px; }
+.tense-be-noun-agreement { grid-column: 1 / -1; padding: 13px; border: 1px solid color-mix(in srgb, var(--warning) 24%, transparent); border-radius: 12px; background: color-mix(in srgb, var(--surface) 78%, transparent); }
+.tense-be-noun-heading { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 12px; margin-bottom: 10px; }
+.tense-be-noun-heading h5 { margin: 0; color: var(--warning); white-space: nowrap; }
+.tense-be-noun-heading p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+.tense-be-noun-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tense-be-noun-group { display: grid; grid-template-columns: minmax(145px, .7fr) minmax(0, 1.3fr); gap: 7px 12px; padding: 10px; border-radius: 9px; background: var(--surface); }
+.tense-be-noun-group > strong { grid-column: 1 / -1; padding-bottom: 6px; border-bottom: 1px solid var(--line); color: var(--warning); font-size: 12px; }
+.tense-be-noun-examples { display: grid; gap: 5px; }
+.tense-be-noun-examples small { display: grid; gap: 1px; font-size: 11px; line-height: 1.35; }
+.tense-be-noun-groups small span { color: var(--muted); }
+.tense-be-equivalences { display: grid; align-content: start; gap: 5px; }
+.tense-be-equivalences span { padding: 5px 7px; border-radius: 7px; background: var(--warning-soft); font-size: 10px; font-weight: 800; }
+.tense-be-you-note { margin: 10px 0 0; padding: 8px 10px; border-left: 3px solid var(--warning); border-radius: 0 8px 8px 0; color: var(--text); background: var(--warning-soft); font-size: 11px; line-height: 1.45; }
 .tense-be-choice { display: grid; min-width: 180px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--warning) 25%, transparent); border-radius: 9px; background: var(--surface); }
 .tense-be-choice strong { display: flex; justify-content: space-between; gap: 8px; padding: 6px 8px; border-radius: 0; }
 .tense-be-choice strong span { color: var(--text); }
@@ -1006,6 +1019,30 @@ textarea:disabled { opacity: .6; cursor: default; }
 .tense-be-comparison p { display: grid; grid-template-columns: minmax(140px, auto) minmax(0, 1fr); align-items: baseline; gap: 8px; font-size: 11px; line-height: 1.45; }
 .tense-be-comparison p + p { margin-top: 4px; }
 .tense-be-comparison span { color: var(--warning); font-weight: 800; }
+.tense-who-questions { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(210px, .7fr); gap: 12px; margin-top: 14px; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent); border-radius: 13px; background: var(--primary-soft); }
+.tense-who-heading { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 16px; padding-bottom: 10px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); }
+.tense-who-heading > div { display: flex; align-items: baseline; gap: 7px; white-space: nowrap; }
+.tense-who-heading span { color: var(--primary); font-size: 9px; font-weight: 900; letter-spacing: .1em; }
+.tense-who-heading h4 { color: var(--text); font: 900 14px Manrope, sans-serif; }
+.tense-who-heading p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+.tense-who-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.tense-who-cards article { display: grid; align-content: start; gap: 6px; padding: 11px; border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); border-radius: 10px; background: var(--surface); }
+.tense-who-cards article > strong { color: var(--primary); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+.tense-who-explanation { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+.tense-who-cards article > b { font-size: 11px; line-height: 1.4; }
+.tense-who-case-examples { display: grid; gap: 6px; margin-top: 2px; padding-top: 7px; border-top: 1px solid var(--line); }
+.tense-who-case-examples p { display: grid; gap: 2px; margin: 0; }
+.tense-who-case-examples p span { color: var(--text); font-size: 12px; font-weight: 800; }
+.tense-who-case-examples p small { color: var(--muted); font-size: 11px; }
+.tense-who-cards article em { align-self: end; margin-top: 2px; padding: 6px 8px; border-radius: 7px; color: var(--primary); background: var(--primary-soft); font-size: 10px; font-style: normal; font-weight: 850; }
+.tense-who-comparison { padding: 10px; border-radius: 10px; background: var(--surface); }
+.tense-who-comparison h5, .tense-who-rule > strong { display: block; margin-bottom: 6px; color: var(--primary); font: 900 10px Manrope, sans-serif; letter-spacing: .07em; text-transform: uppercase; }
+.tense-who-comparison p { display: grid; gap: 1px; padding: 6px 0; border-top: 1px solid var(--line); font-size: 11px; }
+.tense-who-comparison p strong { color: var(--text); }
+.tense-who-comparison p span { color: var(--muted); }
+.tense-who-comparison p small { margin-top: 2px; color: var(--primary); font-size: 10px; font-weight: 850; }
+.tense-who-rule { grid-column: 1 / -1; padding: 9px 11px; border-left: 3px solid var(--primary); border-radius: 0 9px 9px 0; background: var(--surface); }
+.tense-who-rule p { margin: 2px 0; color: var(--text); font-size: 11px; line-height: 1.45; }
 .tense-be-exception.compact { grid-template-columns: 1fr 1fr; }
 .tense-be-exception.compact .tense-be-intro { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(180px, 1fr) auto; align-items: center; gap: 8px 16px; padding-bottom: 10px; border-bottom: 1px solid color-mix(in srgb, var(--warning) 22%, transparent); }
 .tense-be-exception.compact .tense-be-description { margin: 0; }
@@ -1024,6 +1061,8 @@ textarea:disabled { opacity: .6; cursor: default; }
 .tense-details ul { display: grid; gap: 7px; margin: 0; padding: 0; color: var(--muted); font-size: 12px; line-height: 1.45; list-style: none; }
 .tense-details li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 6px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-soft); }
 .tense-details li::before { content: '✓'; color: var(--primary); font-weight: 900; }
+.tense-rule-keyword { display: inline-flex; align-items: center; justify-content: center; min-width: 58px; margin-bottom: 5px; padding: 4px 9px; border-radius: 999px; color: #fff; background: var(--primary); font-size: 11px; font-weight: 900; letter-spacing: .05em; }
+.tense-rule-keyword + span { display: block; color: var(--text); font-weight: 650; }
 .tense-theory-grid.restructured { grid-template-columns: 1fr; gap: 14px; }
 .tense-theory-grid.restructured .tense-formula-group { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 12px; }
 .tense-theory-grid.restructured.present-simple .tense-formula-group { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -1074,6 +1113,12 @@ textarea:disabled { opacity: .6; cursor: default; }
   .tense-be-exception.compact { grid-template-columns: 1fr; }
   .tense-be-exception.compact .tense-be-intro { grid-column: 1; display: block; }
   .tense-be-exception.compact .tense-be-description, .tense-be-exception.compact .tense-be-usage, .tense-be-exception.compact .tense-be-prompt, .tense-be-exception.compact .tense-be-conjugations, .tense-be-exception.compact .tense-be-note { margin-top: 9px; }
+  .tense-be-noun-heading, .tense-be-noun-groups { grid-template-columns: 1fr; }
+  .tense-be-noun-heading { gap: 4px; }
+  .tense-be-noun-heading h5 { white-space: normal; }
+  .tense-who-questions, .tense-who-heading, .tense-who-cards { grid-template-columns: 1fr; }
+  .tense-who-heading { gap: 6px; }
+  .tense-who-heading > div { white-space: normal; }
   .tense-theory-grid.restructured .tense-formula-group, .tense-theory-grid.restructured .tense-details, .tense-theory-grid.restructured .tense-details ul { grid-template-columns: 1fr; }
   .tense-theory-grid.restructured .tense-formula-line { min-height: 0; }
 }

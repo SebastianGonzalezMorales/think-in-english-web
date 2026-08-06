@@ -28,7 +28,21 @@ export default function VocabularyView({ itemType = 'word' }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const result = await addWord({ ...form, type: itemType });
+    const english = form.english.trim();
+    const spanish = form.spanish.trim();
+    if (!english && !spanish) {
+      setMessage({ type: 'error', text: `Completa la ${singular} en inglés y su significado en español.` });
+      return;
+    }
+    if (!english) {
+      setMessage({ type: 'error', text: `Escribe la ${singular} en inglés antes de guardarla.` });
+      return;
+    }
+    if (!spanish) {
+      setMessage({ type: 'error', text: 'Escribe su significado en español antes de guardarla.' });
+      return;
+    }
+    const result = await addWord({ ...form, english, spanish, context: form.context.trim(), type: itemType });
     if (!result.ok) {
       setMessage(result.reason === 'duplicate'
         ? { type: 'error', text: `Esa ${singular} en inglés ya está guardada.` }
