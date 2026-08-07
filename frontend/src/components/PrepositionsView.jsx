@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { normalize, similarity } from '../utils/utils';
+import { describeCorrection, isAcceptableTypo, normalize, similarity } from '../utils/utils';
 import { prepositionLessons } from '../data/prepositionLessons';
 
 const STORAGE_KEY = 'englishTrainerPrepositionProgress';
@@ -60,13 +60,16 @@ export default function PrepositionsView() {
     if (!answer.trim() || feedback) return;
     const scores = acceptedAnswers(question).map((expected) => ({ expected, score: similarity(answer, expected) }));
     scores.sort((a, b) => b.score - a.score);
-    const correct = scores[0].score >= 0.96;
+    const typoAccepted = scores[0].score !== 1 && isAcceptableTypo(answer, scores[0].expected);
+    const correct = scores[0].score === 1 || typoAccepted;
     const mistake = mistakeExplanation(question, answer);
     setFeedback({
       correct,
       expected: scores[0].expected,
       explanation: mistake ?? question.explanation,
       similarity: Math.round(scores[0].score * 100),
+      correction: correct ? null : describeCorrection(answer, scores[0].expected),
+      typoCorrection: typoAccepted ? describeCorrection(answer, scores[0].expected) : null,
     });
     if (correct) {
       const key = `${lesson.id}-${questionIndex}`;
@@ -138,6 +141,8 @@ export default function PrepositionsView() {
           {!feedback ? <button className="btn-primary" type="submit">Comprobar</button> : (
             <div ref={feedbackRef} className={`preposition-feedback ${feedback.correct ? 'success' : 'error'}`}>
               <div><strong>{feedback.correct ? '¡Correcto!' : `Respuesta válida: ${feedback.expected}`}</strong><span>{feedback.similarity}% de similitud</span></div>
+              {feedback.typoCorrection && <p className="answer-correction accepted"><strong>Error de escritura aceptado:</strong> {feedback.typoCorrection}</p>}
+              {feedback.correction && <p className="answer-correction"><strong>Revisa:</strong> {feedback.correction}</p>}
               <p>{feedback.explanation}</p>
               <button className="btn-secondary" type="button" onClick={nextQuestion}>Siguiente pregunta →</button>
             </div>

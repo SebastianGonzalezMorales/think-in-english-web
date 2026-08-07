@@ -951,7 +951,7 @@ textarea:disabled { opacity: .6; cursor: default; }
 }
 .tense-periods button { padding: 8px 14px; border-radius: 9px; color: var(--muted); font-weight: 800; }
 .tense-periods button.active { color: #fff; background: var(--primary); }
-.tenses-layout { display: grid; grid-template-columns: minmax(220px, 270px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.tenses-layout { display: grid; grid-template-columns: minmax(280px, 310px) minmax(0, 1fr); gap: 16px; align-items: start; }
 .tense-list { display: grid; gap: 7px; padding: 14px; position: sticky; top: 10px; }
 .tense-list > .eyebrow { margin: 4px 6px 6px; }
 .tense-list button {
@@ -1076,11 +1076,31 @@ textarea:disabled { opacity: .6; cursor: default; }
 .tense-example { display: grid; align-content: start; gap: 3px; padding: 9px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .tense-example strong { font-size: 13px; }
 .tense-example span { color: var(--muted); font-size: 12px; }
+.future-forms-guide { display: grid; gap: 14px; }
+.future-form-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 5px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); }
+.future-form-tabs button { padding: 9px 12px; border-radius: 9px; color: var(--muted); font-size: 12px; font-weight: 850; }
+.future-form-tabs button.active { color: #fff; background: var(--primary); }
+.future-form-panel { display: grid; gap: 13px; padding: 16px; border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--line)); border-radius: 14px; background: var(--surface-soft); }
+.future-form-heading { display: grid; gap: 4px; }
+.future-form-heading > span { color: var(--primary); font-size: 9px; font-weight: 900; letter-spacing: .08em; }
+.future-form-heading h4 { margin: 0; font: 850 17px Manrope, sans-serif; }
+.future-form-heading p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.future-structure-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.future-structure-list article, .future-use-list article, .future-comparison-list article { display: grid; align-content: start; gap: 4px; padding: 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.future-structure-list article > span, .future-use-list article > span, .future-comparison-list article > span { color: var(--primary); font-size: 10px; font-weight: 900; text-transform: uppercase; }
+.future-structure-list article > strong { font-size: 12px; }
+.future-structure-list article > small { color: var(--muted); font-size: 11px; }
+.future-use-list, .future-comparison-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.future-use-list article > strong, .future-comparison-list article > strong { font-size: 12px; }
+.future-use-list article > p, .future-comparison-list article > p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+.future-quick-rule { margin: 0; padding: 10px 12px; border-left: 3px solid var(--primary); border-radius: 0 9px 9px 0; background: var(--surface); font-size: 12px; line-height: 1.5; }
 .tense-practice-switch { display: inline-flex; gap: 5px; margin-top: 12px; padding: 4px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface-soft); }
-.tense-list button .tense-list-split-progress { display: grid; flex: 0 0 112px; gap: 6px; padding-left: 10px; border-left: 1px solid color-mix(in srgb, var(--primary) 24%, transparent); }
-.tense-list-split-progress > b { color: var(--muted); font-size: 9px; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
-.tense-list button .tense-list-split-progress > span { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 7px; }
-.tense-list-split-progress span small { color: var(--text); font-size: 10px; font-weight: 700; line-height: 1.15; }
+.tense-list button.has-split-progress { display: grid; grid-template-columns: minmax(0, 1fr) 126px; align-items: center; gap: 12px; }
+.tense-list button.has-split-progress > div:first-child { min-width: 0; }
+.tense-list button .tense-list-split-progress { display: grid; width: 100%; gap: 6px; padding-left: 11px; border-left: 1px solid color-mix(in srgb, var(--primary) 24%, transparent); }
+.tense-list-split-progress > b { color: var(--muted); font-size: 9px; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.tense-list button .tense-list-split-progress > span { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+.tense-list-split-progress span small { color: var(--text); font-size: 10px; font-weight: 750; line-height: 1.15; }
 .tense-list-split-progress span strong { margin: 0; color: var(--primary); font-size: 13px; white-space: nowrap; }
 .tense-practice-switch button { padding: 7px 11px; border-radius: 8px; color: var(--muted); font-size: 11px; font-weight: 850; }
 .tense-practice-switch button.active { color: #fff; background: var(--primary); }
@@ -1101,6 +1121,9 @@ textarea:disabled { opacity: .6; cursor: default; }
   color: var(--text); background: var(--surface); font-size: 11px; font-weight: 800;
 }
 .tense-feedback p { margin: 5px 0 11px; font-size: 13px; line-height: 1.5; }
+.tense-feedback .answer-correction, .preposition-feedback .answer-correction { display: block; margin: 10px 0 7px; padding: 9px 11px; border-radius: 9px; color: var(--text); background: var(--surface); font-size: 13px; }
+.answer-correction strong { color: var(--danger); }
+.answer-correction.accepted strong { color: var(--success); }
 .tense-results { display: grid; gap: 16px; margin-top: 18px; }
 .tense-results h3 { margin: -8px 0 0; }
 .tense-score { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 18px; padding: 18px; border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--line)); border-radius: 14px; background: var(--primary-soft); }
@@ -1123,6 +1146,8 @@ textarea:disabled { opacity: .6; cursor: default; }
   .tense-quiz form { grid-template-columns: 1fr; }
   .tense-quiz form .field-label { grid-column: 1; }
   .tense-practice-switch { display: grid; grid-template-columns: 1fr 1fr; }
+  .tense-practice-switch.three-options, .future-form-tabs { grid-template-columns: 1fr; }
+  .future-structure-list, .future-use-list, .future-comparison-list { grid-template-columns: 1fr; }
   .tense-daily-plan { grid-template-columns: auto 1fr; }
   .tense-daily-plan > p, .tense-daily-plan > small { grid-column: 1 / -1; }
   .tense-be-exception { grid-template-columns: 1fr; gap: 14px; }

@@ -1,7 +1,8 @@
 export function normalize(text) {
   return text
     .toLowerCase()
-    .replace(/['']/g, "'")
+    // Accept the apostrophe variants commonly produced by Spanish keyboards.
+    .replace(/[\u2018\u2019\u00b4\u0060\u02bc]/g, "'")
     .replace(/\b(i'm)\b/g, 'i am')
     .replace(/\b(i've)\b/g, 'i have')
     .replace(/\b(i'd)\b/g, 'i would')
@@ -41,6 +42,67 @@ export function similarity(a, b) {
   const y = normalize(b);
   if (!x || !y) return 0;
   return 1 - levenshtein(x, y) / Math.max(x.length, y.length);
+}
+
+export function describeCorrection(input, expected) {
+  const inputWords = normalize(input).split(' ').filter(Boolean);
+  const expectedWords = normalize(expected).split(' ').filter(Boolean);
+  let start = 0;
+  while (start < inputWords.length && start < expectedWords.length && inputWords[start] === expectedWords[start]) start += 1;
+
+  let inputEnd = inputWords.length - 1;
+  let expectedEnd = expectedWords.length - 1;
+  while (inputEnd >= start && expectedEnd >= start && inputWords[inputEnd] === expectedWords[expectedEnd]) {
+    inputEnd -= 1;
+    expectedEnd -= 1;
+  }
+
+  const written = inputWords.slice(start, inputEnd + 1).join(' ');
+  const replacement = expectedWords.slice(start, expectedEnd + 1).join(' ');
+  if (written && replacement) return `“${written}” → “${replacement}”`;
+  if (replacement) return `Falta “${replacement}”`;
+  if (written) return `Quita “${written}”`;
+  return null;
+}
+
+const STRICT_GRAMMAR_WORDS = new Set([
+  'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them',
+  'my', 'your', 'his', 'its', 'our', 'their', 'a', 'an', 'the', 'this', 'that',
+  'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
+  'do', 'does', 'did', 'have', 'has', 'had', 'will', 'would', 'can', 'could',
+  'should', 'may', 'might', 'must', 'not', 'no', 'yes', 'to', 'of', 'in', 'on',
+  'at', 'for', 'from', 'with', 'by', 'about', 'into', 'through', 'before', 'after',
+  'and', 'or', 'but', 'if', 'because', 'who', 'what', 'where', 'when', 'why', 'how',
+]);
+
+function isAdjacentTransposition(first, second) {
+  if (first.length !== second.length) return false;
+  const differences = [];
+  for (let index = 0; index < first.length; index += 1) {
+    if (first[index] !== second[index]) differences.push(index);
+  }
+  return differences.length === 2
+    && differences[1] === differences[0] + 1
+    && first[differences[0]] === second[differences[1]]
+    && first[differences[1]] === second[differences[0]];
+}
+
+export function isAcceptableTypo(input, expected) {
+  const inputWords = normalize(input).split(' ').filter(Boolean);
+  const expectedWords = normalize(expected).split(' ').filter(Boolean);
+  if (inputWords.length !== expectedWords.length) return false;
+  const differences = inputWords
+    .map((word, index) => [word, expectedWords[index]])
+    .filter(([word, expectedWord]) => word !== expectedWord);
+  if (differences.length !== 1) return false;
+
+  const [written, correct] = differences[0];
+  if (written.length < 4 || correct.length < 4) return false;
+  if (STRICT_GRAMMAR_WORDS.has(written) || STRICT_GRAMMAR_WORDS.has(correct)) return false;
+  const shorter = written.length < correct.length ? written : correct;
+  const longer = written.length < correct.length ? correct : written;
+  if ([`${shorter}s`, `${shorter}d`].includes(longer)) return false;
+  return levenshtein(written, correct) === 1 || isAdjacentTransposition(written, correct);
 }
 
 export function evaluateAnswer(input, phrase) {

@@ -1,7 +1,8 @@
-const q = (prompt, answers, explanation) => ({
+const q = (prompt, answers, explanation, kind) => ({
   prompt,
   answers: Array.isArray(answers) ? answers : [answers],
   explanation,
+  ...(kind ? { kind } : {}),
 });
 
 export const extraTenseQuestions = {
@@ -51,19 +52,19 @@ export const extraTenseQuestions = {
     q('Formula la pregunta: ¿Cuánto costó?', ['How much did it cost', 'How much did that cost'], 'Después de did usamos cost en forma base.'),
   ],
   'future-forms': [
-    q('Completa: I promise I ___ (be) careful.', 'will be', 'Will se usa para una promesa.'),
-    q('Completa: They ___ (move) next month; everything is arranged.', 'are going to move', 'Going to expresa un plan previo.'),
-    q('Completa: The phone is ringing. I ___ (answer) it.', 'will answer', 'Will expresa una decisión tomada en el momento.'),
-    q('Completa: He ___ not ___ (join) us tomorrow.', ['will not join', "won't join"], 'La negación con will usa will not + verbo base.'),
-    q('Completa: We ___ not ___ (stay) very long.', ['are not going to stay', "aren't going to stay"], 'Un plan negativo usa are not going to.'),
-    q('Traduce: Creo que te gustará.', ['I think you will like it', "I think you'll like it"], 'Will sirve para una predicción basada en una opinión.'),
-    q('Traduce: Voy a empezar un curso nuevo.', ['I am going to start a new course', "I'm going to start a new course"], 'Going to expresa una intención ya decidida.'),
-    q('Traduce: No llegaremos tarde.', ['We will not arrive late', "We won't arrive late", 'We will not be late', "We won't be late"], 'Will not expresa una predicción o promesa negativa.'),
-    q('Traduce: Ella va a vender su casa.', ['She is going to sell her house', "She's going to sell her house"], 'Going to expresa un plan previo.'),
-    q('Formula la pregunta: ¿Vendrás mañana?', 'Will you come tomorrow', 'La pregunta comienza con will.'),
-    q('Formula la pregunta: ¿Dónde van a quedarse?', 'Where are they going to stay', 'Usamos where + are + sujeto + going to.'),
-    q('Formula la pregunta: ¿Quién ganará?', 'Who will win', 'Who funciona como sujeto y va seguido de will + verbo base.'),
-    q('Formula la pregunta: ¿Vas a llamar a María?', 'Are you going to call Maria', 'La pregunta comienza con are.'),
+    q('Formula la pregunta: ¿Qué harás mañana?', 'What will you do tomorrow', 'En una Wh-question usamos what + will + sujeto + verbo base.', 'will'),
+    q('Formula la pregunta: ¿Dónde irá ella?', 'Where will she go', 'Usamos where + will + she + verbo base go.', 'will'),
+    q('Formula la pregunta: ¿Cuándo llegará el tren?', 'When will the train arrive', 'Después de when usamos will + sujeto + verbo base.', 'will'),
+    q('Formula la pregunta: ¿Por qué se quedarán aquí?', 'Why will they stay here', 'La estructura es why + will + they + stay.', 'will'),
+    q('Transforma en pregunta: He will finish today.', 'Will he finish today', 'Movemos will antes del sujeto para formar la pregunta.', 'will'),
+    q('Transforma a negativa: They will travel next week.', ['They will not travel next week', "They won't travel next week"], 'La negativa usa will not o won’t antes de travel.', 'will'),
+    q('Completa: The phone is ringing. I ___ (answer) it.', 'will answer', 'Will expresa una decisión espontánea tomada ahora.', 'will'),
+    q('Traduce: Prometo que tendré cuidado.', ['I promise I will be careful', "I promise I'll be careful"], 'Will se usa para expresar una promesa.', 'will'),
+    q('Traduce: Yo llevaré esa bolsa por ti.', ['I will carry that bag for you', "I'll carry that bag for you"], 'Will permite hacer un ofrecimiento.', 'will'),
+    q('Completa: I think you ___ (like) this book.', 'will like', 'Will expresa una predicción basada en una opinión.', 'will'),
+    q('Traduce: Creo que mañana lloverá.', ['I think it will rain tomorrow', "I think it'll rain tomorrow"], 'I think suele introducir una predicción u opinión con will.', 'will'),
+    q('Formula la pregunta: ¿Quién ganará?', 'Who will win', 'Cuando who es el sujeto usamos who + will + verbo base.', 'will'),
+    q('Completa la respuesta corta: Will you help us? Yes, I ___.', 'will', 'La respuesta corta afirmativa repite will.', 'will'),
   ],
   'present-perfect': [
     q('Completa: I ___ just ___ (finish) lunch.', 'have just finished', 'Con I usamos have + just + participio.'),
