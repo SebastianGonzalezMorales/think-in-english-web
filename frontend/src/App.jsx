@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { useStats } from './hooks/useStats';
 import PracticeView from './components/PracticeView';
@@ -37,17 +37,50 @@ const PAGE_TITLES = {
   prepositions: 'Comprende y usa las preposiciones',
 };
 
+const VIEW_PATHS = {
+  practice: '/',
+  review: '/frases-dificiles/repaso',
+  progress: '/progreso',
+  mistakes: '/frases-dificiles',
+  vocabulary: '/mis-palabras',
+  'vocabulary-practice': '/practicar-palabras',
+  'my-phrases': '/mis-frases',
+  'phrases-practice': '/practicar-frases',
+  tenses: '/tiempos-verbales',
+  prepositions: '/preposiciones',
+};
+
+const PATH_VIEWS = Object.fromEntries(Object.entries(VIEW_PATHS).map(([view, path]) => [path, view]));
+
+function viewFromLocation() {
+  const path = window.location.pathname.replace(/\/$/, '') || '/';
+  return PATH_VIEWS[path] ?? 'practice';
+}
+
 function Shell() {
-  const [view,        setView]        = useState('practice');
+  const [view,        setView]        = useState(viewFromLocation);
   const [collapsed,   setCollapsed]   = useState(false);
   const [reviewQueue, setReviewQueue] = useState(null);
   const { dark, toggleTheme } = useTheme();
   const { stats } = useStats();
   const { user, logout } = useAuth();
 
-  const startReview = (ids) => { setReviewQueue(ids); setView('review'); };
-  const handleNavClick = (id) => { setReviewQueue(null); setView(id); };
+  const navigateTo = (id, { replace = false } = {}) => {
+    setView(id);
+    window.history[replace ? 'replaceState' : 'pushState']({}, '', VIEW_PATHS[id]);
+  };
+  const startReview = (ids) => { setReviewQueue(ids); navigateTo('review'); };
+  const handleNavClick = (id) => { setReviewQueue(null); navigateTo(id); };
   const activeNav = view === 'review' ? 'mistakes' : view;
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setReviewQueue(null);
+      setView(viewFromLocation());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   return (
     <div className={`app-shell${collapsed ? ' sidebar-collapsed' : ''}`}>
@@ -144,7 +177,7 @@ function Shell() {
         {(view === 'practice' || view === 'review') && (
           <PracticeView
             reviewQueue={reviewQueue}
-            onReviewDone={() => { setReviewQueue(null); setView('mistakes'); }}
+            onReviewDone={() => { setReviewQueue(null); navigateTo('mistakes', { replace: true }); }}
           />
         )}
         {view === 'progress' && <ProgressView />}
@@ -152,12 +185,12 @@ function Shell() {
         {view === 'vocabulary' && <VocabularyView />}
         {view === 'my-phrases' && <VocabularyView itemType="phrase" />}
         {view === 'vocabulary-practice' && (
-          <VocabularyPracticeView onGoToVocabulary={() => setView('vocabulary')} />
+          <VocabularyPracticeView onGoToVocabulary={() => navigateTo('vocabulary')} />
         )}
         {view === 'phrases-practice' && (
           <VocabularyPracticeView
             itemType="phrase"
-            onGoToVocabulary={() => setView('my-phrases')}
+            onGoToVocabulary={() => navigateTo('my-phrases')}
           />
         )}
         {view === 'tenses' && <TensesView />}

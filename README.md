@@ -8,28 +8,38 @@ Entrenador de traducción activa español → inglés. El objetivo no es memoriz
 
 ## ¿Por qué existe este proyecto?
 
-La mayoría de las apps de idiomas te piden que reconozcas palabras o completes frases a medias. Eso entrena la comprensión, pero no la producción. Este proyecto parte de una premisa distinta:
+Muchas aplicaciones de idiomas son útiles para comenzar, pero suelen concentrarse en vocabulario básico, ejercicios de reconocimiento y frases a medio completar. Cuando ya tienes un nivel intermedio, eso no siempre es suficiente para seguir avanzando hasta comprender el inglés con naturalidad y expresar ideas propias.
 
-> **Leer inglés y hablarlo son habilidades diferentes. Para hablar, hay que practicar hablar.**
+Este proyecto nace para entrenar una habilidad diferente:
 
-Cada ejercicio te muestra una frase en español y tú debes escribir la traducción completa desde cero. El sistema evalúa tu respuesta, te explica los errores gramaticales y guarda las frases que más te cuestan para que puedas repasarlas.
+> **No quiero limitarme a reconocer el inglés: quiero aprender a construirlo, pensar en él y expresarme con naturalidad.**
+
+Cada ejercicio te presenta una idea en español y te pide escribirla completamente en inglés, sin depender de alternativas ni frases ya construidas. Ese esfuerzo te obliga a recordar vocabulario, elegir la estructura adecuada y acostumbrarte a formular pensamientos por tu cuenta. El sistema evalúa la respuesta, entrega una explicación y guarda las frases que más cuestan para poder repasarlas.
+
+Por ahora, Think in English se concentra en la escritura como una forma deliberada de aprender a pensar en inglés y dejar atrás la traducción automática palabra por palabra. La práctica oral puede convertirse más adelante en el siguiente paso: llevar esa misma capacidad de construir ideas a una conversación real.
 
 ---
 
 ## Funcionalidades
 
-- **Traducción activa** — escribe la frase completa en inglés, sin ayuda de opciones múltiples
-- **Evaluación inteligente** — combina comparación exacta con distancia de Levenshtein para aceptar variaciones naturales y contracciones (`I'm`, `couldn't`, etc.)
-- **Retroalimentación inmediata** — versión recomendada, explicación gramatical y alternativas válidas
-- **7 categorías** — Vida cotidiana, Trabajo, Tecnología, Viajes, Universidad, Entrevistas, Números
-- **5 niveles de dificultad** — desde present simple hasta condicionales complejos y registro académico
-- **Frases difíciles** — las respuestas incorrectas se guardan automáticamente para repetición inteligente
-- **Vocabulario personal** — guarda palabras nuevas, su significado y una frase de contexto
-- **Práctica bidireccional de palabras** — practica inglés → español, español → inglés o ambas direcciones mezcladas
-- **Progreso por categoría** — precisión, total de frases respondidas y racha diaria
-- **Modo oscuro** — persistido entre sesiones
-- **Cuentas personales** — autenticación mediante una sesión segura en cookie HttpOnly
-- **Vocabulario sincronizado** — palabras y frases personales almacenadas en MongoDB
+- **Traducción activa** — escribe frases completas en inglés desde cero, sin depender de alternativas
+- **Evaluación inteligente** — combina comparación exacta y similitud para aceptar variaciones naturales y contracciones (`I'm`, `couldn't`, etc.)
+- **Retroalimentación inmediata** — muestra una respuesta recomendada, una explicación gramatical y alternativas válidas
+- **Práctica por categorías y dificultad** — trabaja con situaciones de la vida cotidiana, el trabajo, la tecnología, los viajes, la universidad y otros contextos reales
+- **Tiempos verbales** — estudia y practica estructuras de presente, pasado y futuro, desde fundamentos hasta contenidos avanzados
+- **Práctica separada del verbo _to be_** — distingue _am/is/are_ y _was/were_ de los verbos de acción en Present Simple y Past Simple
+- **Preposiciones** — aprende preposiciones de lugar, tiempo y movimiento mediante explicaciones, ejemplos y actividades
+- **Resumen de práctica** — al terminar un recorrido muestra el puntaje, los aciertos y las respuestas que conviene repasar
+- **Último resultado** — conserva localmente el porcentaje más reciente de cada práctica de Present Simple y Past Simple
+- **Frases difíciles** — guarda automáticamente las respuestas incorrectas para volver a practicarlas
+- **Vocabulario personal** — permite guardar palabras nuevas, su significado y una frase de contexto
+- **Frases personales** — permite crear una colección propia y practicarla en ambas direcciones
+- **Práctica bidireccional** — practica inglés → español, español → inglés o ambas direcciones mezcladas
+- **Seguimiento del aprendizaje** — muestra precisión, actividad acumulada y racha de estudio
+- **Navegación con rutas** — cada sección principal tiene su propia URL y se conserva al recargar la página
+- **Modo oscuro** — mantiene la preferencia visual entre sesiones
+- **Cuentas personales** — utiliza autenticación con una sesión segura mediante cookie HttpOnly
+- **Datos sincronizados** — almacena palabras y frases personales en MongoDB
 
 ---
 

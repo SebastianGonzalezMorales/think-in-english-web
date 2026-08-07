@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { normalize, similarity } from '../utils/utils';
 import { prepositionLessons } from '../data/prepositionLessons';
 
@@ -31,6 +31,7 @@ export default function PrepositionsView() {
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState(null);
   const [progress, setProgress] = useState(savedProgress);
+  const feedbackRef = useRef(null);
   const lesson = prepositionLessons.find((item) => item.id === lessonId);
   const question = lesson.questions[questionIndex];
   const lessonCorrect = useMemo(() => lesson.questions.filter((_, index) => (
@@ -42,6 +43,17 @@ export default function PrepositionsView() {
     setAnswer('');
     setFeedback(null);
   }, [lessonId]);
+
+  useEffect(() => {
+    if (!feedback) return undefined;
+    const frame = requestAnimationFrame(() => {
+      feedbackRef.current?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'nearest',
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [feedback]);
 
   const checkAnswer = (event) => {
     event.preventDefault();
@@ -124,7 +136,7 @@ export default function PrepositionsView() {
           </label>
           <input id="prepositionAnswer" className="text-input" value={answer} onChange={(event) => setAnswer(event.target.value)} disabled={Boolean(feedback)} autoComplete="off" />
           {!feedback ? <button className="btn-primary" type="submit">Comprobar</button> : (
-            <div className={`preposition-feedback ${feedback.correct ? 'success' : 'error'}`}>
+            <div ref={feedbackRef} className={`preposition-feedback ${feedback.correct ? 'success' : 'error'}`}>
               <div><strong>{feedback.correct ? '¡Correcto!' : `Respuesta válida: ${feedback.expected}`}</strong><span>{feedback.similarity}% de similitud</span></div>
               <p>{feedback.explanation}</p>
               <button className="btn-secondary" type="button" onClick={nextQuestion}>Siguiente pregunta →</button>

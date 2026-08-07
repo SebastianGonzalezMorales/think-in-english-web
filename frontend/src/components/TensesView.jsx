@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { similarity } from '../utils/utils';
 import { TENSE_LEVELS, TENSE_PERIODS, tenseLessons } from '../data/tenseLessons';
 
 const STORAGE_KEY = 'englishTrainerTenseProgress';
 const POSITION_STORAGE_KEY = 'englishTrainerTensePositions';
+const RESULT_STORAGE_KEY = 'englishTrainerTenseLastResults';
 
 const PRACTICE_HELP = {
   'present-simple': {
@@ -23,6 +24,11 @@ function savedProgress() {
 
 function savedPositions() {
   try { return JSON.parse(localStorage.getItem(POSITION_STORAGE_KEY)) ?? {}; }
+  catch { return {}; }
+}
+
+function savedResults() {
+  try { return JSON.parse(localStorage.getItem(RESULT_STORAGE_KEY)) ?? {}; }
   catch { return {}; }
 }
 
@@ -194,7 +200,11 @@ export default function TensesView() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState(null);
+  const [sessionResults, setSessionResults] = useState([]);
+  const [quizComplete, setQuizComplete] = useState(false);
   const [progress, setProgress] = useState(savedProgress);
+  const [lastResults, setLastResults] = useState(savedResults);
+  const feedbackRef = useRef(null);
 
   const lessons = useMemo(() => tenseLessons.filter((lesson) => (
     lesson.level === level && (period === 'all' || lesson.period === period)
@@ -206,6 +216,16 @@ export default function TensesView() {
   const question = practiceQuestions[safeQuestionIndex];
   const completed = Object.values(progress).filter(Boolean).length;
   const totalQuestions = tenseLessons.reduce((total, item) => total + item.questions.length, 0);
+  const sessionCorrect = sessionResults.filter((result) => result.correct).length;
+  const sessionScore = sessionResults.length ? Math.round((sessionCorrect / sessionResults.length) * 100) : 0;
+  const sessionLabel = exerciseKind === 'be' ? 'verbo to be' : 'verbos normales';
+  const scoreMessage = sessionScore === 100
+    ? '¡Excelente! Dominaste esta práctica.'
+    : sessionScore >= 75
+      ? '¡Muy bien! Estás cerca de dominarla.'
+      : sessionScore >= 50
+        ? 'Buen avance. Repasa tus errores y vuelve a intentarlo.'
+        : 'Conviene repasar la explicación y repetir la práctica.';
 
   useEffect(() => {
     if (!lessons.some((item) => item.id === lessonId)) setLessonId(lessons[0]?.id);
@@ -215,6 +235,8 @@ export default function TensesView() {
     setExerciseKind('action');
     setAnswer('');
     setFeedback(null);
+    setSessionResults([]);
+    setQuizComplete(false);
   }, [lessonId]);
 
   useEffect(() => {
@@ -228,7 +250,20 @@ export default function TensesView() {
     setQuestionIndex(restoredPosition);
     setAnswer('');
     setFeedback(null);
+    setSessionResults([]);
+    setQuizComplete(false);
   }, [lesson.id, exerciseKind]);
+
+  useEffect(() => {
+    if (!feedback) return undefined;
+    const frame = requestAnimationFrame(() => {
+      feedbackRef.current?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'nearest',
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [feedback]);
 
   const checkAnswer = (event) => {
     event.preventDefault();
@@ -244,6 +279,12 @@ export default function TensesView() {
       explanation: question.explanation,
       similarity: Math.round(scores[0].score * 100),
     });
+    setSessionResults((current) => [...current, {
+      correct,
+      prompt: question.prompt,
+      answer: answer.trim(),
+      expected: scores[0].expected,
+    }]);
     if (correct) {
       const key = question.progressId;
       setProgress((current) => {
@@ -255,6 +296,22 @@ export default function TensesView() {
   };
 
   const nextQuestion = () => {
+    if (sessionResults.length >= practiceQuestions.length) {
+      const resultKey = `${lesson.id}:${exerciseKind}`;
+      const latestResult = {
+        correct: sessionCorrect,
+        total: sessionResults.length,
+        score: sessionScore,
+        completedAt: new Date().toISOString(),
+      };
+      setLastResults((current) => {
+        const next = { ...current, [resultKey]: latestResult };
+        localStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(next));
+        return next;
+      });
+      setQuizComplete(true);
+      return;
+    }
     setQuestionIndex((current) => {
       const nextIndex = (current + 1) % practiceQuestions.length;
       const positions = savedPositions();
@@ -264,6 +321,17 @@ export default function TensesView() {
     });
     setAnswer('');
     setFeedback(null);
+  };
+
+  const restartPractice = () => {
+    setQuestionIndex(0);
+    setAnswer('');
+    setFeedback(null);
+    setSessionResults([]);
+    setQuizComplete(false);
+    const positions = savedPositions();
+    positions[`${lesson.id}:${exerciseKind}`] = 0;
+    localStorage.setItem(POSITION_STORAGE_KEY, JSON.stringify(positions));
   };
 
   return (
@@ -308,10 +376,24 @@ export default function TensesView() {
           <p className="eyebrow">LECCIONES</p>
           {lessons.map((item) => {
             const correct = item.questions.filter((itemQuestion) => progress[itemQuestion.progressId]).length;
+            const splitProgress = item.beException && PRACTICE_HELP[item.id]
+              ? ['action', 'be'].map((kind) => {
+                return {
+                  kind,
+                  result: lastResults[`${item.id}:${kind}`],
+                };
+              })
+              : null;
             return (
               <button key={item.id} className={lesson?.id === item.id ? 'active' : ''} onClick={() => setLessonId(item.id)}>
                 <div><strong>{item.title}</strong><span>{item.summary}</span></div>
-                <small>{correct}/{item.questions.length}</small>
+                {splitProgress ? (
+                  <div className="tense-list-split-progress" aria-label="Último resultado">
+                    <b>Último resultado</b>
+                    <span><small>Verbos normales</small><strong>{splitProgress[0].result ? `${splitProgress[0].result.score}%` : '—'}</strong></span>
+                    <span><small>Verbo to be</small><strong>{splitProgress[1].result ? `${splitProgress[1].result.score}%` : '—'}</strong></span>
+                  </div>
+                ) : <small>{correct}/{item.questions.length}</small>}
               </button>
             );
           })}
@@ -339,17 +421,34 @@ export default function TensesView() {
             </section>
 
             <section className="card tense-quiz">
-              <div className="exercise-topline"><span className="eyebrow">PONLO EN PRÁCTICA</span><span className="counter">Pregunta {safeQuestionIndex + 1} de {practiceQuestions.length}</span></div>
+              <div className="exercise-topline"><span className="eyebrow">PONLO EN PRÁCTICA</span><span className="counter">{quizComplete ? 'Práctica finalizada' : `Pregunta ${feedback ? sessionResults.length : sessionResults.length + 1} de ${practiceQuestions.length}`}</span></div>
               {hasSplitPractice && (
                 <div className="tense-practice-switch" aria-label="Tipo de verbo">
                   <button type="button" className={exerciseKind === 'action' ? 'active' : ''} onClick={() => setExerciseKind('action')}>Verbos normales</button>
                   <button type="button" className={exerciseKind === 'be' ? 'active' : ''} onClick={() => setExerciseKind('be')}>Verbo to be</button>
                 </div>
               )}
-              {hasSplitPractice && <p className="tense-practice-help">{PRACTICE_HELP[lesson.id][exerciseKind]}</p>}
-              {hasSplitPractice && <span className={`tense-question-kind ${question.kind}`}>{question.kind === 'be' ? 'Verbo to be' : 'Verbo de acción'}</span>}
-              <h3>{question.prompt}</h3>
-              <form onSubmit={checkAnswer}>
+              {quizComplete ? (
+                <div className="tense-results" aria-live="polite">
+                  <p className="eyebrow">RESUMEN DE TU PRÁCTICA</p>
+                  <h3>{lesson.title}: {sessionLabel}</h3>
+                  <div className="tense-score">
+                    <strong>{sessionScore}<span>%</span></strong>
+                    <div><b>{scoreMessage}</b><p>Completaste {sessionResults.length} preguntas: {sessionCorrect} correctas y {sessionResults.length - sessionCorrect} por repasar.</p></div>
+                  </div>
+                  <div className="tense-result-stats">
+                    <span><strong>{sessionCorrect}</strong>Aciertos</span>
+                    <span><strong>{sessionResults.length - sessionCorrect}</strong>Por repasar</span>
+                    <span><strong>{sessionResults.length}</strong>Respondidas</span>
+                  </div>
+                  <button className="btn-primary" type="button" onClick={restartPractice}>Repetir práctica</button>
+                </div>
+              ) : (
+                <>
+                  {hasSplitPractice && <p className="tense-practice-help">{PRACTICE_HELP[lesson.id][exerciseKind]}</p>}
+                  {hasSplitPractice && <span className={`tense-question-kind ${question.kind}`}>{question.kind === 'be' ? 'Verbo to be' : 'Verbo de acción'}</span>}
+                  <h3>{question.prompt}</h3>
+                  <form onSubmit={checkAnswer}>
                 <label className="field-label" htmlFor="tenseAnswer">
                   {question.prompt.startsWith('Completa:')
                     ? 'Escribe lo que falta o la oración completa'
@@ -365,16 +464,18 @@ export default function TensesView() {
                   autoComplete="off"
                 />
                 {!feedback ? <button className="btn-primary" type="submit">Comprobar</button> : (
-                  <div className={`tense-feedback ${feedback.correct ? 'success' : 'error'}`}>
+                  <div ref={feedbackRef} className={`tense-feedback ${feedback.correct ? 'success' : 'error'}`}>
                     <div className="tense-feedback-heading">
                       <strong>{feedback.correct ? '¡Correcto!' : `Respuesta: ${feedback.expected}`}</strong>
                       <span>{feedback.similarity}% de similitud</span>
                     </div>
                     <p>{feedback.explanation}</p>
-                    <button className="btn-secondary" type="button" onClick={nextQuestion}>Siguiente pregunta →</button>
+                    <button className="btn-secondary" type="button" onClick={nextQuestion}>{sessionResults.length >= practiceQuestions.length ? 'Ver resumen →' : 'Siguiente pregunta →'}</button>
                   </div>
                 )}
-              </form>
+                  </form>
+                </>
+              )}
             </section>
           </div>
         )}
